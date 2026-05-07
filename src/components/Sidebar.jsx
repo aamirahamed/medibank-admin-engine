@@ -5,7 +5,9 @@ import {
   Zap, 
   Megaphone, 
   Globe2, 
-  Filter 
+  Filter,
+  Rocket,
+  Network
 } from 'lucide-react';
 
 const Sidebar = () => {
@@ -13,8 +15,10 @@ const Sidebar = () => {
     { path: '/', label: 'Command Centre', icon: <LayoutDashboard size={20} /> },
     { path: '/segments', label: 'Student Segments', icon: <Users size={20} /> },
     { path: '/action-studio', label: 'Action Studio', icon: <Zap size={20} /> },
+    { path: '/activation', label: 'Activation Engine', icon: <Rocket size={20} /> },
     { path: '/campaigns', label: 'Campaigns', icon: <Megaphone size={20} /> },
     { path: '/community', label: 'Community', icon: <Globe2 size={20} /> },
+    { path: '/referrals', label: 'Referral Operations', icon: <Network size={20} /> },
     { path: '/funnel', label: 'Conversion Funnel', icon: <Filter size={20} /> },
   ];
 

@@ -6,6 +6,8 @@ import ActionStudio from './pages/ActionStudio';
 import Campaigns from './pages/Campaigns';
 import Community from './pages/Community';
 import ConversionFunnel from './pages/ConversionFunnel';
+import ActivationEngine from './pages/ActivationEngine';
+import ReferralOps from './pages/ReferralOps';
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
           <Route path="campaigns" element={<Campaigns />} />
           <Route path="community" element={<Community />} />
           <Route path="funnel" element={<ConversionFunnel />} />
+          <Route path="activation" element={<ActivationEngine />} />
+          <Route path="referrals" element={<ReferralOps />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>
