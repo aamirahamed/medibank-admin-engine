@@ -1,643 +1,614 @@
 import { useState } from 'react';
 import { 
-  Plus, X, ChevronRight, ChevronLeft, 
-  Users, Zap, Target, Send, MessageSquare, Activity,
-  Smartphone, Bell, Mail, Gift, CheckCircle2, ArrowRight,
-  Clock, Calendar, Trash2
+  Bot, Sparkles, TrendingUp, AlertCircle, ArrowRight, Activity, Network, Zap, 
+  Users, Crosshair, ChevronRight, BarChart3, CheckCircle2, ShieldAlert, Target,
+  GitMerge, Settings, Clock, Mail, MessageSquare, Smartphone, Bell, ChevronDown, X
 } from 'lucide-react';
+import { 
+  actionHero,
+  aiWorkflows,
+  crossAgentFlow,
+  performanceIntelligence,
+  optimisationRecommendations,
+  approvalQueue,
+  actionSummaryStr
+} from '../data/mockData';
 
-const STEPS = [
-  { id: 1, label: 'Audience', icon: Users },
-  { id: 2, label: 'Trigger', icon: Zap },
-  { id: 3, label: 'Action', icon: Target },
-  { id: 4, label: 'Delivery', icon: Send },
-  { id: 5, label: 'Experience', icon: MessageSquare },
-  { id: 6, label: 'Impact', icon: Activity },
-];
+const ActionStudio = () => {
+  const [toastMessage, setToastMessage] = useState('');
+  const [activeWorkflow, setActiveWorkflow] = useState(null);
 
-const AUDIENCE_OPTIONS = [
-  { id: 'grad', name: 'Graduating in 60 Days', size: '2,100' },
-  { id: 'risk', name: 'Low Engagement, At Risk', size: '840' },
-  { id: 'explore', name: 'High Engagement, Not Converted', size: '3,450' },
-];
-
-const ACTION_CARDS = [
-  { id: 'in_app', name: 'In-App Nudge', icon: Smartphone, desc: 'Show a modal inside the app.' },
-  { id: 'push', name: 'Push Notification', icon: Bell, desc: 'Send a direct OS notification.' },
-  { id: 'email', name: 'Email Sequence', icon: Mail, desc: 'Trigger an automated email.' },
-  { id: 'reward', name: 'Offer Reward', icon: Gift, desc: 'Grant bonus health points.' },
-];
-
-// Logic Builder Configuration
-const SUBJECT_OPTIONS = [
-  { id: 'user_activity', label: 'User Activity' },
-  { id: 'page_views', label: 'Page Views' },
-  { id: 'time_to_expiry', label: 'Time to Expiry' }
-];
-
-const OPERATORS = {
-  user_activity: [{ id: 'has_been', label: 'has been' }],
-  page_views: [{ id: 'includes', label: 'includes' }, { id: 'excludes', label: 'does not include' }],
-  time_to_expiry: [{ id: 'less_than', label: 'is less than' }, { id: 'exactly', label: 'is exactly' }]
-};
-
-const VALUES = {
-  user_activity: [
-    { id: 'inactive_7', label: 'Inactive for 7+ days' },
-    { id: 'inactive_14', label: 'Inactive for 14+ days' },
-    { id: 'active_weekly', label: 'Active weekly' }
-  ],
-  page_views: [
-    { id: 'pricing', label: 'Pricing Page' },
-    { id: 'checkout', label: 'Checkout Flow' },
-    { id: 'benefits', label: 'Benefits Overview' }
-  ],
-  time_to_expiry: [
-    { id: '60_days', label: '60 Days' },
-    { id: '30_days', label: '30 Days' },
-    { id: '7_days', label: '7 Days' }
-  ]
-};
-
-export default function ActionStudio() {
-  const [isBuilderOpen, setIsBuilderOpen] = useState(false);
-  const [activeRules, setActiveRules] = useState([
-    { id: 1, name: 'Graduation Prep Nudge', status: 'Active', audience: 'Graduating in 60 Days', trigger: 'Time-based expiry', action: 'In-App Nudge' },
-    { id: 2, name: 'Re-engagement 14 Day', status: 'Draft', audience: 'Low Engagement, At Risk', trigger: 'Inactive 14+ days', action: 'Push Notification' }
-  ]);
-
-  const handleRuleActivated = (newRule) => {
-    setActiveRules([...activeRules, { ...newRule, id: Date.now(), status: 'Active' }]);
-    setIsBuilderOpen(false);
+  const triggerAction = (actionName) => {
+    setToastMessage(`Action triggered: ${actionName}`);
+    setTimeout(() => setToastMessage(''), 3000);
   };
 
   return (
-    <div className="page-layer">
-      {!isBuilderOpen ? (
-        <div className="cockpit-container">
-          <div className="cockpit-header flex-between">
-            <div className="header-text">
-              <h1>Action Studio</h1>
-              <p>Design behavioural interventions and automated rules.</p>
+    <div className="cockpit-container page-layer">
+      {toastMessage && (
+        <div className="toast-notification">
+          <CheckCircle2 size={18} />
+          {toastMessage}
+        </div>
+      )}
+
+      <div className="cockpit-header flex-between">
+        <div className="header-text">
+          <h1>Action Studio</h1>
+          <p>AI-assisted operational decision and intervention workspace.</p>
+        </div>
+        <div className="live-status-badge">
+          <span className="pulse-dot-accent"></span>
+          Intervention Engine Active
+        </div>
+      </div>
+
+      {/* 1. AI OPERATIONAL RECOMMENDATIONS HERO */}
+      <section className="action-hero-section">
+        <div className="hero-glow-bg"></div>
+        <div className="ah-header">
+          <div className="ah-title-group">
+            <Sparkles size={24} className="text-warning" />
+            <h2>{actionHero.title}</h2>
+          </div>
+        </div>
+        
+        <div className="ah-content">
+          <p className="ah-action-text">"{actionHero.action}"</p>
+          
+          <div className="ah-metrics">
+            <div className="ah-metric-box opp-box">
+              <span className="ah-label">Est. Revenue Impact</span>
+              <span className="ah-value text-success">{actionHero.revenue}</span>
             </div>
-            <button className="btn-primary-action red-btn" onClick={() => setIsBuilderOpen(true)}>
-              <Plus size={16} /> Create Rule
-            </button>
+            <div className="ah-metric-box opp-box">
+              <span className="ah-label">Conversion Uplift</span>
+              <span className="ah-value text-success">{actionHero.uplift}</span>
+            </div>
+            <div className="ah-metric-box">
+              <span className="ah-label">Audience Size</span>
+              <span className="ah-value">{actionHero.size}</span>
+            </div>
+            <div className="ah-metric-box">
+              <span className="ah-label">AI Confidence</span>
+              <span className="ah-value text-warning">{actionHero.confidence}</span>
+            </div>
           </div>
 
-          <div className="dashboard-grid mt-32">
-            <div className="dashboard-panel premium-glass">
-              <h3 className="panel-title mb-16">Your Rules</h3>
-              <div className="rules-list">
-                {activeRules.map(rule => (
-                  <div key={rule.id} className="rule-list-item elevated-card flex-between">
-                    <div>
-                      <div className="flex-center gap-sm mb-4">
-                        <span className={`status-dot ${rule.status === 'Active' ? 'bg-success' : 'bg-muted'}`}></span>
-                        <h4 className="text-bright font-medium">{rule.name}</h4>
-                      </div>
-                      <p className="text-muted text-sm">Target: {rule.audience} • Trigger: {rule.trigger}</p>
+          <div className="ah-agents">
+            <span className="text-muted text-sm font-semibold uppercase tracking-wider mb-8 block">Contributing Agents</span>
+            <div className="agent-tags">
+              {actionHero.agents.map((ag, i) => (
+                <span key={i} className="agent-tag bg-warning-dim text-warning"><Bot size={12}/> {ag}</span>
+              ))}
+            </div>
+          </div>
+          
+          <div className="ah-actions mt-32">
+            <button className="btn-primary-action btn-warning-gradient" onClick={() => triggerAction('Approve & Launch')}>
+              <Zap size={16} /> Approve Recommendation
+            </button>
+            <button className="btn-outline" onClick={() => triggerAction('Review Workflow')}>Review Workflow</button>
+            <button className="btn-outline" onClick={() => triggerAction('View Reasoning')}>View Reasoning</button>
+          </div>
+        </div>
+      </section>
+
+      <div className="split-layout mt-48">
+        {/* LEFT COLUMN: INTERVENTIONS & REASONING */}
+        <div className="column-main">
+          
+          {/* 2. AI-RECOMMENDED WORKFLOWS SECTION */}
+          <section className="recommended-workflows-section">
+            <div className="section-head">
+              <div className="head-title">
+                <Target size={20} className="text-accent" />
+                <h2>AI-Suggested Interventions</h2>
+              </div>
+              <span className="ai-badge">Awaiting Human Review</span>
+            </div>
+
+            <div className="workflows-list">
+              {aiWorkflows.map(wf => (
+                <div key={wf.id} className="workflow-card elevated-card">
+                  <div className="wf-header">
+                    <h3 className="wf-name">{wf.name}</h3>
+                    <div className="wf-confidence"><Bot size={14}/> Confidence: <span className="text-accent">{wf.confidence}</span></div>
+                  </div>
+
+                  <div className="wf-why-box">
+                    <span className="wf-section-label">Why This Was Recommended:</span>
+                    <p>{wf.why}</p>
+                  </div>
+
+                  <div className="wf-grid">
+                    <div className="wf-grid-item">
+                      <span className="wf-label"><Users size={14}/> Audience</span>
+                      <span className="wf-val">{wf.audience}</span>
                     </div>
-                    <div className="text-right">
-                      <span className="action-tag">{rule.action}</span>
+                    <div className="wf-grid-item">
+                      <span className="wf-label"><Smartphone size={14}/> Channels</span>
+                      <span className="wf-val">{wf.channels}</span>
                     </div>
+                    <div className="wf-grid-item">
+                      <span className="wf-label"><Clock size={14}/> Timing</span>
+                      <span className="wf-val">{wf.timing}</span>
+                    </div>
+                    <div className="wf-grid-item border-l-success pl-16">
+                      <span className="wf-label text-success"><TrendingUp size={14}/> Business Impact</span>
+                      <span className="wf-val text-success font-semibold">{wf.impact.revenue} <span className="text-muted text-sm font-normal ml-8">{wf.impact.uplift}</span></span>
+                    </div>
+                  </div>
+
+                  <div className="wf-agents-row mt-24">
+                    <span className="wf-label inline-block mr-12"><Network size={14}/> Generated By:</span>
+                    {wf.agents.map((ag, i) => <span key={i} className="agent-tag text-muted"><Bot size={12}/> {ag}</span>)}
+                  </div>
+
+                  <div className="wf-footer">
+                    <button className="btn-primary-action" onClick={() => setActiveWorkflow(wf)}>
+                      Review Workflow <ArrowRight size={14} />
+                    </button>
+                    <button className="btn-outline-small" onClick={() => setActiveWorkflow(wf)}>Modify Before Launch</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* 5. CROSS-AGENT COLLABORATION FLOW */}
+          <section className="collaboration-flow-section mt-48">
+             <div className="section-head">
+              <div className="head-title">
+                <GitMerge size={20} className="text-warning" />
+                <h2>Cross-Agent Orchestration Flow</h2>
+              </div>
+            </div>
+            <div className="flow-container elevated-card">
+              <div className="flow-path">
+                {crossAgentFlow.map((step, idx) => (
+                  <div key={idx} className="flow-step">
+                    <div className="fs-icon"><Bot size={18} className="text-warning"/></div>
+                    <div className="fs-content">
+                      <span className="fs-agent">{step.agent}</span>
+                      <p className="fs-action">{step.action}</p>
+                    </div>
+                    {idx < crossAgentFlow.length - 1 && <div className="fs-connector"><ChevronDown size={20} className="text-muted"/></div>}
                   </div>
                 ))}
               </div>
             </div>
-          </div>
+          </section>
         </div>
-      ) : (
-        <RuleBuilderModal 
-          onClose={() => setIsBuilderOpen(false)} 
-          onComplete={handleRuleActivated}
+
+        {/* RIGHT COLUMN: GOVERNANCE & INTELLIGENCE */}
+        <div className="column-side">
+          
+          {/* 4. OPERATIONAL IMPACT PREVIEW */}
+          <section className="impact-preview-section">
+            <div className="section-head">
+              <div className="head-title">
+                <Activity size={20} className="text-success" />
+                <h2>Projected Impact Preview</h2>
+              </div>
+            </div>
+            <div className="impact-dashboard elevated-card">
+              <div className="id-metric border-b">
+                <span className="id-label">Total Est. Revenue Opportunity</span>
+                <span className="id-value text-success">+$420K</span>
+              </div>
+              <div className="id-metric border-b">
+                <span className="id-label">Average Conversion Uplift</span>
+                <span className="id-value text-accent">+2.8%</span>
+              </div>
+              <div className="id-metric">
+                <span className="id-label">Total Students Affected</span>
+                <span className="id-value">12,650</span>
+              </div>
+            </div>
+          </section>
+
+          {/* 8. HUMAN APPROVAL GOVERNANCE PANEL */}
+          <section className="governance-panel-section mt-48">
+            <div className="section-head">
+              <div className="head-title">
+                <ShieldAlert size={20} className="text-danger" />
+                <h2>Human Approval Queue</h2>
+              </div>
+            </div>
+            <div className="governance-list">
+              {approvalQueue.map((item, idx) => (
+                <div key={idx} className="gov-card elevated-card border-l-danger">
+                  <div className="flex-between mb-8">
+                    <span className="gov-title">{item.name}</span>
+                    <span className="status-badge bg-danger-dim text-danger">{item.status}</span>
+                  </div>
+                  <div className="flex-between align-end">
+                    <span className="gov-impact text-success font-semibold">{item.impact}</span>
+                    <button className="btn-outline-small" onClick={() => triggerAction('Review & Approve')}>Review & Approve</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* 6. LIVE WORKFLOW PERFORMANCE INTELLIGENCE */}
+          <section className="performance-intelligence-section mt-48">
+            <div className="section-head">
+              <div className="head-title">
+                <Activity size={20} className="text-accent" />
+                <h2>Live Performance Insights</h2>
+              </div>
+            </div>
+            <div className="pi-list">
+              {performanceIntelligence.map((pi, idx) => (
+                <div key={idx} className="pi-card elevated-card">
+                  <p className="pi-insight">"{pi.insight}"</p>
+                  <div className="flex-between mt-12">
+                    <span className="pi-meta"><Bot size={12}/> Conf: {pi.confidence}</span>
+                    <span className={`pi-impact ${pi.impact === 'High' ? 'text-success' : 'text-warning'}`}>{pi.impact} Impact</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* 7. RECOMMENDED OPTIMISATIONS PANEL */}
+          <section className="optimisation-section mt-48">
+             <div className="section-head">
+              <div className="head-title">
+                <Settings size={20} className="text-warning" />
+                <h2>Proactive Optimisations</h2>
+              </div>
+            </div>
+            <div className="opt-list">
+              {optimisationRecommendations.map((opt, idx) => (
+                <div key={idx} className="opt-card elevated-card">
+                  <h4 className="opt-title">{opt.title}</h4>
+                  <p className="opt-why">{opt.why}</p>
+                  <div className="opt-metrics">
+                    <span className="opt-proj text-success">{opt.projected}</span>
+                    <button className="btn-text-action text-accent" onClick={() => triggerAction('Apply Tweak')}>Apply Tweak <ChevronRight size={14}/></button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+        </div>
+      </div>
+
+      {/* 9. EXECUTIVE ACTION SUMMARY */}
+      <section className="executive-summary-section mt-48 elevated-card">
+        <div className="es-icon">
+          <BarChart3 size={24} className="text-warning" />
+        </div>
+        <div className="es-content">
+          <span className="es-label">Strategic Action Summary · Generated by Insight Narrator</span>
+          <p className="es-text">"{actionSummaryStr}"</p>
+        </div>
+      </section>
+
+      {activeWorkflow && (
+        <WorkflowReviewModal 
+          workflow={activeWorkflow} 
+          onClose={() => setActiveWorkflow(null)} 
+          onApprove={() => {
+            triggerAction(`Activated: ${activeWorkflow.name}`);
+            setActiveWorkflow(null);
+          }} 
         />
       )}
 
       <style>{`
-        .page-layer { background-color: #050505; min-height: 100vh; padding-bottom: 40px; color: #EDEDED; }
-        .cockpit-container { max-width: 1200px; margin: 0 auto; padding: 40px; }
+        /* 
+          DEEP DARK PREMIUM THEME
+          Apple/Stripe/Linear inspired for AI operations
+        */
+        
+        .cockpit-container {
+          --bg-dark: #070709;
+          --card-bg: #101114;
+          --card-border: rgba(255, 255, 255, 0.05);
+          --card-border-hover: rgba(255, 255, 255, 0.12);
+          
+          --text-bright: #FFFFFF;
+          --text-main: #E2E8F0;
+          --text-muted: #8B949E;
+          
+          --color-success: #10B981;
+          --color-warning: #F5A623;
+          --color-danger: #EF4444;
+          --color-accent: #8A2BE2; /* Intelligence Purple */
+
+          background-color: var(--bg-dark);
+          color: var(--text-main);
+          padding-bottom: 80px;
+          min-height: 100vh;
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        .mt-12 { margin-top: 12px; }
+        .mt-24 { margin-top: 24px; }
+        .mt-32 { margin-top: 32px; }
+        .mt-48 { margin-top: 48px; }
+        .mb-8 { margin-bottom: 8px; }
+        .ml-8 { margin-left: 8px; }
+        .mr-12 { margin-right: 12px; }
+        .pl-16 { padding-left: 16px; }
+
+        .text-bright { color: var(--text-bright); font-weight: 500; }
+        .text-muted { color: var(--text-muted); }
+        .text-warning { color: var(--color-warning); }
+        .text-danger { color: var(--color-danger); }
+        .text-success { color: var(--color-success); }
+        .text-accent { color: var(--color-accent); }
+        .font-semibold { font-weight: 600; }
+        .font-normal { font-weight: 400; }
+        .uppercase { text-transform: uppercase; }
+        .tracking-wider { letter-spacing: 0.05em; }
+        .block { display: block; }
+        .inline-block { display: inline-block; }
+        .text-sm { font-size: 12px; }
+
+        .bg-warning-dim { background: rgba(245, 166, 35, 0.1); border: 1px solid rgba(245, 166, 35, 0.2); }
+        .bg-danger-dim { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); }
+
+        h1, h2, h3, h4 { color: var(--text-bright); letter-spacing: -0.02em; margin:0; }
+        
+        .cockpit-header { margin-bottom: 40px; }
+        .header-text h1 { font-size: 32px; font-weight: 700; margin-bottom: 8px; }
+        .header-text p { font-size: 15px; color: var(--text-muted); }
+        
         .flex-between { display: flex; justify-content: space-between; align-items: center; }
         .flex-center { display: flex; align-items: center; }
-        .gap-md { gap: 16px; }
-        .gap-sm { gap: 8px; }
-        .mb-4 { margin-bottom: 4px; }
-        .mb-16 { margin-bottom: 16px; }
-        .mb-24 { margin-bottom: 24px; }
-        .mb-32 { margin-bottom: 32px; }
-        .mb-40 { margin-bottom: 40px; }
-        .mt-8 { margin-top: 8px; }
-        .mt-32 { margin-top: 32px; }
-        .text-bright { color: #FFF; }
-        .text-muted { color: #8A8F98; }
-        .text-sm { font-size: 13px; }
-        .font-medium { font-weight: 500; }
-        
-        .header-text h1 { font-size: 28px; font-weight: 600; color: white; margin-bottom: 6px; }
-        .header-text p { color: #8A8F98; font-size: 14px; }
-        
-        .red-btn { background: #E60028; color: white; border: none; padding: 10px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; }
-        .red-btn:hover { background: #FF1A43; }
-        
-        .premium-glass { background: #111216; border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 24px; }
-        .elevated-card { background: #16181C; border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.05); }
-        
-        .rules-list { display: flex; flex-direction: column; gap: 16px; }
-        .status-dot { width: 8px; height: 8px; border-radius: 50%; }
-        .bg-success { background: #10B981; box-shadow: 0 0 8px #10B981; }
-        .bg-muted { background: #8A8F98; }
-        
-        .action-tag { background: rgba(255,255,255,0.05); padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; color: #D1D5DB; }
-      `}</style>
-    </div>
-  );
-}
+        .align-end { align-items: flex-end; }
 
-// ----------------------------------------------------
-// RULE BUILDER MODAL COMPONENT
-// ----------------------------------------------------
-function RuleBuilderModal({ onClose, onComplete }) {
-  const [step, setStep] = useState(2); // Starting at 2 to see the triggers immediately
-  const [config, setConfig] = useState({
-    audience: null,
-    conditions: [
-      { id: Date.now(), subject: 'user_activity', operator: 'has_been', value: 'inactive_7' }
-    ],
-    action: null,
-    channel: 'in_app',
-    timing: 'immediate',
-    messageTitle: 'Your OVHC Options',
-    messageBody: 'Your OSHC cover expires soon. Explore graduate health plans today.'
-  });
-
-  const handleNext = () => { if (step < 6) setStep(step + 1); };
-  const handlePrev = () => { if (step > 1) setStep(step - 1); };
-  
-  const handleActivate = () => {
-    onComplete({
-      name: 'Custom Conversion Rule',
-      audience: AUDIENCE_OPTIONS.find(a => a.id === config.audience)?.name || 'Custom Audience',
-      trigger: config.conditions[0] ? VALUES[config.conditions[0].subject]?.find(v=>v.id===config.conditions[0].value)?.label || 'Custom Trigger' : 'Custom Trigger',
-      action: ACTION_CARDS.find(a => a.id === config.action)?.name || 'Custom Action'
-    });
-  };
-
-  const addCondition = () => {
-    setConfig({
-      ...config,
-      conditions: [...config.conditions, { id: Date.now(), subject: 'page_views', operator: 'includes', value: 'pricing' }]
-    });
-  };
-
-  const updateCondition = (id, field, value) => {
-    const updatedConditions = config.conditions.map(c => {
-      if (c.id === id) {
-        const newCondition = { ...c, [field]: value };
-        // Reset operator and value if subject changes
-        if (field === 'subject') {
-          newCondition.operator = OPERATORS[value][0].id;
-          newCondition.value = VALUES[value][0].id;
+        .live-status-badge {
+          display: flex; align-items: center; gap: 8px;
+          background: rgba(245, 166, 35, 0.1);
+          color: var(--color-warning);
+          padding: 6px 12px; border-radius: 20px;
+          font-size: 13px; font-weight: 600;
+          border: 1px solid rgba(245, 166, 35, 0.2);
         }
-        return newCondition;
-      }
-      return c;
-    });
-    setConfig({ ...config, conditions: updatedConditions });
-  };
+        .pulse-dot-accent {
+          width: 8px; height: 8px; border-radius: 50%; background: var(--color-warning);
+          box-shadow: 0 0 10px var(--color-warning); animation: pulseWarning 2s infinite;
+        }
 
-  const removeCondition = (id) => {
-    setConfig({
-      ...config,
-      conditions: config.conditions.filter(c => c.id !== id)
-    });
-  };
+        .section-head {
+          display: flex; justify-content: space-between; align-items: center;
+          margin-bottom: 24px; padding-bottom: 12px;
+          border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+        .head-title { display: flex; align-items: center; gap: 10px; }
+        .head-title h2 { font-size: 18px; font-weight: 600; }
 
-  const selectedAudienceObj = AUDIENCE_OPTIONS.find(a => a.id === config.audience);
+        .elevated-card {
+          background: var(--card-bg);
+          border: 1px solid var(--card-border);
+          border-radius: 12px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.03);
+          transition: all 0.2s ease;
+        }
+        .elevated-card:hover {
+          border-color: var(--card-border-hover);
+          box-shadow: 0 8px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
+        }
 
-  return (
-    <div className="builder-takeover">
-      <div className="builder-header flex-between">
-        <div className="flex-center gap-md">
-          <button className="icon-btn" onClick={onClose}><X size={20} /></button>
-          <div className="builder-title">
-            <span className="text-muted text-sm font-medium" style={{display:'block', marginBottom:'2px', letterSpacing:'0.5px'}}>ACTION STUDIO</span>
-            <h2>Create New Rule</h2>
-          </div>
-        </div>
+        /* 1. Hero */
+        .action-hero-section {
+          position: relative; padding: 40px; border-radius: 16px;
+          background: linear-gradient(180deg, #1A130D 0%, #0D0B0A 100%);
+          border: 1px solid rgba(245, 166, 35, 0.2);
+          overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+        .hero-glow-bg {
+          position: absolute; top: -50%; right: -10%; width: 100%; height: 200%;
+          background: radial-gradient(circle at top right, rgba(245, 166, 35, 0.15), transparent 60%);
+          pointer-events: none; z-index: 0;
+        }
+        .ah-header, .ah-content { position: relative; z-index: 1; }
+        .ah-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+        .ah-title-group { display: flex; align-items: center; gap: 12px; }
+        .ah-title-group h2 { font-size: 24px; font-weight: 600; }
         
-        {/* Horizontal Stepper */}
-        <div className="stepper">
-          {STEPS.map((s, i) => (
-            <div key={s.id} className={`stepper-item ${step === s.id ? 'active' : step > s.id ? 'completed' : ''}`}>
-              <div className="step-circle">{step > s.id ? <CheckCircle2 size={14} /> : s.id}</div>
-              <span className="step-label">{s.label}</span>
-              {i < STEPS.length - 1 && <div className="step-connector"></div>}
-            </div>
-          ))}
-        </div>
-
-        <div className="header-actions">
-          <button className="btn-secondary">Save Draft</button>
-        </div>
-      </div>
-
-      <div className="builder-content">
-        <div className="builder-card premium-glass">
-          
-          {/* STEP 1: AUDIENCE */}
-          {step === 1 && (
-            <div className="step-container fade-in">
-              <h2 className="step-title">Define Audience (WHO)</h2>
-              <p className="step-desc">Select the segment of users this rule will target.</p>
-              
-              <div className="audience-selector">
-                <label className="input-label">Select Segment</label>
-                <div className="segment-grid">
-                  {AUDIENCE_OPTIONS.map(opt => (
-                    <div 
-                      key={opt.id} 
-                      className={`selectable-card ${config.audience === opt.id ? 'selected' : ''}`}
-                      onClick={() => setConfig({...config, audience: opt.id})}
-                    >
-                      <h4>{opt.name}</h4>
-                      <p className="text-muted text-sm mt-8">Est. Users: {opt.size}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {selectedAudienceObj && (
-                <div className="impact-toast mt-32">
-                  <Users size={18} className="text-accent" />
-                  <span>Targeting: <strong>{selectedAudienceObj.size}</strong> users based on current data.</span>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* STEP 2: TRIGGER (Upgraded Logic Builder) */}
-          {step === 2 && (
-            <div className="step-container fade-in">
-              <h2 className="step-title">Define Trigger (WHEN)</h2>
-              <p className="step-desc">Set the conditions that will trigger this intervention.</p>
-              
-              <div className="logic-builder">
-                {config.conditions.map((condition, index) => (
-                  <div key={condition.id} className="logic-row">
-                    <div className={`logic-operator-badge ${index === 0 ? 'bg-primary' : 'bg-secondary'}`}>
-                      {index === 0 ? 'IF' : 'AND'}
-                    </div>
-                    
-                    <div className="logic-block-container">
-                      {/* Subject Dropdown */}
-                      <select 
-                        className="logic-select"
-                        value={condition.subject}
-                        onChange={(e) => updateCondition(condition.id, 'subject', e.target.value)}
-                      >
-                        {SUBJECT_OPTIONS.map(opt => <option key={opt.id} value={opt.id}>{opt.label}</option>)}
-                      </select>
-
-                      {/* Operator Dropdown */}
-                      <select 
-                        className="logic-select operator-select"
-                        value={condition.operator}
-                        onChange={(e) => updateCondition(condition.id, 'operator', e.target.value)}
-                      >
-                        {OPERATORS[condition.subject]?.map(opt => <option key={opt.id} value={opt.id}>{opt.label}</option>)}
-                      </select>
-
-                      {/* Value Dropdown */}
-                      <select 
-                        className="logic-select value-select"
-                        value={condition.value}
-                        onChange={(e) => updateCondition(condition.id, 'value', e.target.value)}
-                      >
-                        {VALUES[condition.subject]?.map(opt => <option key={opt.id} value={opt.id}>{opt.label}</option>)}
-                      </select>
-
-                      {/* Remove Button */}
-                      {index > 0 && (
-                        <button className="btn-remove-condition" onClick={() => removeCondition(condition.id)}>
-                          <Trash2 size={16} />
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                ))}
-                
-                <button className="btn-add-condition" onClick={addCondition}>
-                  <Plus size={16} /> Add AND condition
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* STEP 3: ACTION */}
-          {step === 3 && (
-            <div className="step-container fade-in">
-              <h2 className="step-title">Define Action (WHAT)</h2>
-              <p className="step-desc">Choose the type of intervention to trigger.</p>
-              
-              <div className="action-grid">
-                {ACTION_CARDS.map(act => (
-                  <div 
-                    key={act.id} 
-                    className={`selectable-card action-card ${config.action === act.id ? 'selected' : ''}`}
-                    onClick={() => setConfig({...config, action: act.id})}
-                  >
-                    <div className={`action-icon-circle ${config.action === act.id ? 'active-icon' : ''}`}>
-                      <act.icon size={20} />
-                    </div>
-                    <h4>{act.name}</h4>
-                    <p className="text-muted text-sm mt-8">{act.desc}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* STEP 4: DELIVERY */}
-          {step === 4 && (
-            <div className="step-container fade-in">
-              <h2 className="step-title">Channel & Timing (HOW)</h2>
-              <p className="step-desc">Configure where and when the user receives this.</p>
-              
-              <div className="delivery-form">
-                <div className="form-group mb-32">
-                  <label className="input-label">Channel Priority</label>
-                  <div className="channel-toggles">
-                    {['in_app', 'push', 'email'].map(ch => (
-                      <button 
-                        key={ch}
-                        className={`channel-toggle ${config.channel === ch ? 'selected' : ''}`}
-                        onClick={() => setConfig({...config, channel: ch})}
-                      >
-                        {ch === 'in_app' ? 'In-App' : ch === 'push' ? 'Push OS' : 'Email'}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="form-group">
-                  <label className="input-label">Timing</label>
-                  <div className="timing-container flex-center gap-sm">
-                    <Clock size={18} className="text-muted" />
-                    <select 
-                      className="premium-select full-width"
-                      value={config.timing}
-                      onChange={(e) => setConfig({...config, timing: e.target.value})}
-                    >
-                      <option value="immediate">Trigger immediately</option>
-                      <option value="delay_24h">Delay 24 hours after trigger</option>
-                      <option value="next_session">Next app session</option>
-                    </select>
-                  </div>
-                  <p className="text-sm text-muted mt-8">Frequency Cap: 1 per user per 14 days.</p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* STEP 5: EXPERIENCE */}
-          {step === 5 && (
-            <div className="step-container fade-in split-view">
-              <div className="split-left">
-                <h2 className="step-title">Message Builder</h2>
-                <p className="step-desc mb-24">Craft the copy for your intervention.</p>
-                
-                <div className="form-group mb-24">
-                  <label className="input-label">Title</label>
-                  <input 
-                    type="text" 
-                    className="premium-input full-width" 
-                    value={config.messageTitle}
-                    onChange={(e) => setConfig({...config, messageTitle: e.target.value})}
-                  />
-                </div>
-                
-                <div className="form-group">
-                  <label className="input-label flex-between">
-                    Message Body
-                    <span className="text-accent text-sm" style={{cursor:'pointer', fontWeight: 600}}>Insert Variable {}</span>
-                  </label>
-                  <textarea 
-                    className="premium-textarea full-width" 
-                    rows="4"
-                    value={config.messageBody}
-                    onChange={(e) => setConfig({...config, messageBody: e.target.value})}
-                  ></textarea>
-                </div>
-              </div>
-              
-              <div className="split-right flex-center justify-center">
-                <div className="phone-mockup">
-                  <div className="phone-notch"></div>
-                  <div className="phone-screen">
-                    {/* Mock Notification */}
-                    <div className="mock-notification">
-                      <div className="mn-header flex-between">
-                        <div className="flex-center gap-sm">
-                          <div className="mn-app-icon">M</div>
-                          <span>Medibank</span>
-                        </div>
-                        <span>now</span>
-                      </div>
-                      <h4 className="mn-title">{config.messageTitle}</h4>
-                      <p className="mn-body">{config.messageBody}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* STEP 6: IMPACT */}
-          {step === 6 && (
-            <div className="step-container fade-in">
-              <h2 className="step-title">Preview & Impact (WHY)</h2>
-              <p className="step-desc mb-32">Review the strategic impact before activating.</p>
-              
-              <div className="impact-grid mb-40">
-                <div className="impact-card">
-                  <span className="ic-label">Est. Audience Reach</span>
-                  <span className="ic-val text-bright">{selectedAudienceObj?.size || '0'} users</span>
-                </div>
-                <div className="impact-card highlight-card">
-                  <span className="ic-label">Expected Conversion Lift</span>
-                  <span className="ic-val text-success">+3.2%</span>
-                </div>
-                <div className="impact-card">
-                  <span className="ic-label">Churn Risk Mitigation</span>
-                  <span className="ic-val text-accent">Medium</span>
-                </div>
-              </div>
-
-              <div className="rule-summary-box">
-                <h3 className="rs-title mb-16">Rule Logic Summary</h3>
-                <div className="rs-statement">
-                  <span className="rs-keyword">IF</span> user is in segment <strong>"{selectedAudienceObj?.name || 'Custom'}"</strong>
-                </div>
-                {config.conditions.map((c, i) => (
-                  <div key={c.id} className="rs-statement">
-                    <span className="rs-keyword">{i === 0 ? 'AND' : 'AND'}</span> 
-                    trigger condition <strong>{SUBJECT_OPTIONS.find(o=>o.id===c.subject)?.label}</strong> is <strong>{VALUES[c.subject]?.find(v=>v.id===c.value)?.label}</strong>
-                  </div>
-                ))}
-                <div className="rs-statement mt-16">
-                  <span className="rs-keyword bg-success" style={{background:'#10B981'}}>THEN</span> deliver <strong>{config.action?.replace('_', ' ')}</strong> via <strong>{config.channel}</strong> ({config.timing})
-                </div>
-              </div>
-            </div>
-          )}
-
-        </div>
-      </div>
-
-      <div className="builder-footer flex-between">
-        <button 
-          className="btn-secondary" 
-          onClick={handlePrev}
-          style={{ visibility: step === 1 ? 'hidden' : 'visible' }}
-        >
-          <ChevronLeft size={16} /> Back
-        </button>
+        .ah-action-text { font-size: 28px; line-height: 1.3; color: var(--text-bright); margin-bottom: 32px; font-weight: 700; max-width: 85%; letter-spacing: -0.5px; }
         
-        {step < 6 ? (
-          <button 
-            className="btn-primary-hero red-btn" 
-            onClick={handleNext}
-            disabled={(step === 1 && !config.audience) || (step === 3 && !config.action)}
-          >
-            Continue <ChevronRight size={16} />
-          </button>
-        ) : (
-          <button className="btn-primary-hero red-btn glow-btn" onClick={handleActivate}>
-            Activate Rule <ArrowRight size={16} />
-          </button>
-        )}
-      </div>
+        .ah-metrics { display: flex; gap: 24px; margin-bottom: 32px; }
+        .ah-metric-box {
+          background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05);
+          padding: 16px 24px; border-radius: 10px; display: flex; flex-direction: column; gap: 6px;
+        }
+        .opp-box { background: rgba(16, 185, 129, 0.05); border-color: rgba(16, 185, 129, 0.2); }
+        .ah-label { font-size: 12px; text-transform: uppercase; color: var(--text-muted); font-weight: 600;}
+        .ah-value { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; }
+        
+        .ah-actions { display: flex; gap: 16px; }
 
-      <style>{`
-        /* FULL SCREEN MODAL */
+        .btn-primary-action {
+          display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+          background: var(--text-bright); color: var(--bg-dark);
+          border: none; padding: 12px 24px; border-radius: 8px;
+          font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+        }
+        .btn-primary-action:hover { background: #E2E8F0; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(255,255,255,0.1); }
+        
+        .btn-warning-gradient { background: linear-gradient(135deg, #F5A623 0%, #D48806 100%); color: #000; box-shadow: 0 4px 15px rgba(245, 166, 35, 0.2); }
+        .btn-warning-gradient:hover { background: linear-gradient(135deg, #F5A623 0%, #D48806 100%); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(245, 166, 35, 0.4); }
+
+        .btn-outline {
+          background: transparent; color: var(--text-bright);
+          border: 1px solid rgba(255,255,255,0.2); padding: 12px 24px; border-radius: 8px;
+          font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+        }
+        .btn-outline:hover { background: rgba(255,255,255,0.05); }
+
+        .btn-outline-small {
+          background: transparent; color: var(--text-bright);
+          border: 1px solid rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 6px;
+          font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+        }
+        .btn-outline-small:hover { background: rgba(255,255,255,0.05); }
+
+        .btn-text-action { background: none; border: none; padding: 0; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+        .btn-text-action:hover { opacity: 0.8; }
+
+        /* Layout Split */
+        .split-layout { display: grid; grid-template-columns: 1.8fr 1fr; gap: 40px; }
+
+        /* 2. Workflows */
+        .ai-badge {
+          background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+          color: var(--text-main); padding: 4px 10px; border-radius: 6px;
+          font-size: 12px; font-weight: 600;
+        }
+        
+        .workflows-list { display: flex; flex-direction: column; gap: 24px; }
+        .workflow-card { padding: 32px; display: flex; flex-direction: column; gap: 20px; border-top: 3px solid var(--color-accent); }
+
+        .wf-header { display: flex; justify-content: space-between; align-items: flex-start; }
+        .wf-name { font-size: 20px; font-weight: 700; color: var(--text-bright); }
+        .wf-confidence { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; background: rgba(138,43,226,0.1); padding: 4px 10px; border-radius: 6px; border: 1px solid rgba(138,43,226,0.2); }
+
+        .wf-why-box { background: rgba(255,255,255,0.02); padding: 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); }
+        .wf-section-label { font-size: 12px; text-transform: uppercase; color: var(--text-muted); font-weight: 600; margin-bottom: 8px; display: block; }
+        .wf-why-box p { font-size: 15px; color: var(--text-bright); margin: 0; line-height: 1.5; font-style: italic; }
+
+        .wf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 8px; }
+        .wf-grid-item { display: flex; flex-direction: column; gap: 6px; }
+        .wf-label { font-size: 12px; color: var(--text-muted); font-weight: 600; display: flex; align-items: center; gap: 6px; text-transform: uppercase; }
+        .wf-val { font-size: 14px; font-weight: 500; color: var(--text-main); }
+        .border-l-success { border-left: 2px solid var(--color-success); }
+
+        .agent-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+        .agent-tag { background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 20px; font-size: 12px; display: flex; align-items: center; gap: 4px; font-weight: 500; }
+
+        .wf-footer { display: flex; gap: 16px; margin-top: 16px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.05); }
+
+        /* 5. Cross Agent Flow */
+        .flow-container { padding: 32px; }
+        .flow-path { display: flex; flex-direction: column; }
+        .flow-step { display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; }
+        .fs-icon { width: 40px; height: 40px; background: rgba(245,166,35,0.1); border: 1px solid rgba(245,166,35,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 2; margin-bottom: 12px; }
+        .fs-content { margin-bottom: 24px; }
+        .fs-agent { font-size: 13px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; display: block; }
+        .fs-action { font-size: 15px; color: var(--text-bright); line-height: 1.4; margin: 0; }
+        .fs-connector { display: flex; justify-content: center; align-items: center; margin-bottom: 24px; position: relative; }
+        .fs-connector::after { content: ''; position: absolute; top: -20px; bottom: 20px; width: 1px; background: dashed 1px rgba(255,255,255,0.1); z-index: 1; }
+
+        /* 4. Impact Preview */
+        .impact-dashboard { display: flex; flex-direction: column; }
+        .id-metric { padding: 24px; display: flex; flex-direction: column; gap: 8px; }
+        .border-b { border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .id-label { font-size: 13px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
+        .id-value { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; }
+
+        /* 8. Governance */
+        .governance-list { display: flex; flex-direction: column; gap: 16px; }
+        .gov-card { padding: 20px; }
+        .border-l-danger { border-left: 3px solid var(--color-danger); }
+        .gov-title { font-size: 15px; font-weight: 600; color: var(--text-bright); }
+        .status-badge { font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 4px; text-transform: uppercase; }
+        .gov-impact { font-size: 16px; }
+
+        /* 6. Performance Intelligence */
+        .pi-list { display: flex; flex-direction: column; gap: 16px; }
+        .pi-card { padding: 20px; border-left: 2px solid var(--color-accent); }
+        .pi-insight { font-size: 14px; line-height: 1.5; color: var(--text-bright); margin: 0; }
+        .pi-meta { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--text-muted); }
+        .pi-impact { font-size: 12px; font-weight: 600; }
+
+        /* 7. Optimisations */
+        .opt-list { display: flex; flex-direction: column; gap: 16px; }
+        .opt-card { padding: 20px; background: rgba(255,255,255,0.02); }
+        .opt-title { font-size: 14px; font-weight: 600; color: var(--text-bright); margin-bottom: 6px; }
+        .opt-why { font-size: 13px; color: var(--text-muted); line-height: 1.4; margin-bottom: 16px; }
+        .opt-metrics { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px; }
+        .opt-proj { font-size: 13px; font-weight: 600; }
+
+        /* 9. Executive Summary */
+        .executive-summary-section {
+          padding: 32px; display: flex; gap: 24px; align-items: flex-start;
+          background: linear-gradient(90deg, rgba(245, 166, 35, 0.05) 0%, transparent 100%);
+          border-left: 2px solid var(--color-warning);
+        }
+        .es-content { display: flex; flex-direction: column; gap: 8px; }
+        .es-label { font-size: 12px; text-transform: uppercase; font-weight: 600; color: var(--text-muted); letter-spacing: 0.5px; }
+        .es-text { font-size: 18px; font-weight: 400; line-height: 1.6; color: var(--text-bright); font-style: italic; margin: 0; }
+
+        .toast-notification {
+          position: fixed; bottom: 30px; right: 30px; z-index: 100;
+          background: var(--text-bright); color: var(--bg-dark);
+          padding: 12px 24px; border-radius: 8px; font-size: 14px; font-weight: 600;
+          display: flex; align-items: center; gap: 10px;
+          box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+          animation: slideUp 0.3s ease forwards;
+        }
+
+        @keyframes pulseWarning {
+          0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(245, 166, 35, 0.7); }
+          70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(245, 166, 35, 0); }
+          100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(245, 166, 35, 0); }
+        }
+        
+        @keyframes slideUp {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* WORKFLOW REVIEW MODAL */
         .builder-takeover {
           position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-          background: #0A0A0A; z-index: 100;
+          background: #050505; z-index: 1000;
           display: flex; flex-direction: column;
-          animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+          animation: slideUpModal 0.3s cubic-bezier(0.16, 1, 0.3, 1);
           color: #EDEDED;
         }
-        @keyframes slideUp { from { transform: translateY(100px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes slideUpModal { from { transform: translateY(100px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-        /* HEADER & STEPPER */
-        .builder-header {
-          padding: 24px 40px; border-bottom: 1px solid rgba(255,255,255,0.06); background: #111216;
-        }
+        .builder-header { padding: 24px 40px; border-bottom: 1px solid rgba(255,255,255,0.06); background: #111216; }
         .icon-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #FFF; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
         .icon-btn:hover { background: rgba(255,255,255,0.1); }
         .builder-title h2 { font-size: 20px; font-weight: 600; margin: 0; color: #FFF; }
-        
-        .stepper { display: flex; align-items: center; gap: 12px; }
-        .stepper-item { display: flex; align-items: center; gap: 8px; opacity: 0.5; transition: all 0.3s; }
-        .stepper-item.active { opacity: 1; }
-        .stepper-item.completed { opacity: 1; }
-        .stepper-item.active .step-circle { background: #E60028; border-color: #E60028; color: white; box-shadow: 0 0 10px rgba(230,0,40,0.4); }
-        .stepper-item.completed .step-circle { background: #10B981; border-color: #10B981; color: white; }
-        
-        .step-circle { width: 24px; height: 24px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; }
-        .step-label { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-        .step-connector { width: 32px; height: 1px; background: rgba(255,255,255,0.1); margin-left: 8px; }
+        .gap-md { gap: 16px; }
+        .mb-4 { margin-bottom: 4px; }
+        .mb-16 { margin-bottom: 16px; }
+        .border-muted { border-color: rgba(255,255,255,0.1); }
+        .border-l { border-left-width: 1px; border-left-style: solid; }
 
-        .btn-secondary { background: transparent; border: 1px solid rgba(255,255,255,0.1); color: white; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s; }
-        .btn-secondary:hover { background: rgba(255,255,255,0.05); }
+        .header-metric { display: flex; flex-direction: column; }
+        .hm-label { font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: 600; margin-bottom: 4px; }
+        .hm-val { font-size: 18px; font-weight: 700; }
 
-        /* CONTENT AREA */
         .builder-content { flex: 1; overflow-y: auto; display: flex; justify-content: center; padding: 40px; background: #050505; }
-        .builder-card { width: 100%; max-width: 840px; min-height: 500px; display: flex; flex-direction: column; }
-        .fade-in { animation: fadeIn 0.4s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .builder-canvas { width: 100%; max-width: 760px; display: flex; flex-direction: column; align-items: center; }
 
-        .step-title { font-size: 28px; font-weight: 700; color: #FFF; margin-bottom: 8px; letter-spacing: -0.5px; }
-        .step-desc { font-size: 15px; color: #8A8F98; margin-bottom: 40px; }
+        .ib-block { width: 100%; background: #111216; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        .ib-header h3 { font-size: 16px; font-weight: 600; color: #FFF; }
+        .ib-body { margin-top: 16px; }
 
-        /* COMMON UI ELEMENTS */
-        .input-label { display: block; font-size: 13px; font-weight: 600; color: #8A8F98; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
-        .premium-select, .premium-input, .premium-textarea {
-          background: #111216; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px;
-          color: white; padding: 14px 16px; font-size: 15px; outline: none; transition: border-color 0.2s;
-        }
-        .premium-select:focus, .premium-input:focus, .premium-textarea:focus { border-color: #3B82F6; box-shadow: 0 0 0 2px rgba(59,130,246,0.2); }
+        .ai-reasoning-panel { background: rgba(138,43,226,0.08); border-left: 2px solid var(--color-accent); padding: 12px 16px; border-radius: 6px; display: flex; gap: 12px; font-size: 14px; }
+
+        .form-group { display: flex; flex-direction: column; gap: 8px; }
+        .input-label { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .premium-input, .premium-textarea { background: #0A0A0A; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; padding: 12px 16px; font-size: 14px; outline: none; transition: border-color 0.2s; }
+        .premium-input:focus, .premium-textarea:focus { border-color: var(--color-accent); box-shadow: 0 0 0 2px rgba(138,43,226,0.2); }
+        .font-mono { font-family: monospace; }
         .full-width { width: 100%; }
-        
-        .selectable-card {
-          background: #0A0A0A; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px;
-          padding: 20px; cursor: pointer; transition: all 0.2s;
-        }
-        .selectable-card:hover { border-color: rgba(255,255,255,0.2); transform: translateY(-2px); }
-        .selectable-card.selected { border-color: #3B82F6; background: rgba(59,130,246,0.05); box-shadow: inset 0 0 0 1px #3B82F6; }
 
-        /* STEP 1: AUDIENCE */
-        .segment-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-        .impact-toast { background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2); padding: 16px; border-radius: 8px; display: flex; align-items: center; gap: 12px; font-size: 14px; }
-        
-        /* STEP 2: UPGRADED LOGIC BUILDER */
-        .logic-builder { display: flex; flex-direction: column; gap: 24px; }
-        .logic-row { display: flex; align-items: stretch; gap: 16px; }
-        
-        .logic-operator-badge {
-          display: flex; align-items: center; justify-content: center;
-          width: 54px; border-radius: 8px; font-weight: 700; font-size: 13px; letter-spacing: 0.5px;
-        }
-        .bg-primary { background: #E60028; color: white; }
-        .bg-secondary { background: rgba(255,255,255,0.08); color: #8A8F98; border: 1px solid rgba(255,255,255,0.05); }
+        .connector-line { width: 2px; height: 32px; background: rgba(255,255,255,0.1); margin: 0; }
 
-        .logic-block-container {
-          flex: 1; display: flex; align-items: center; gap: 12px;
-          background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
-          border-radius: 12px; padding: 12px;
-        }
-
-        .logic-select {
-          background: #0A0A0A; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px;
-          color: white; padding: 12px 16px; font-size: 14px; font-weight: 500; outline: none; cursor: pointer;
-        }
-        .logic-select:hover { border-color: rgba(255,255,255,0.2); }
-        .operator-select { color: #8A8F98; background: transparent; border: none; padding: 12px 8px; }
-        .value-select { flex: 1; border-color: #3B82F6; background: rgba(59,130,246,0.05); }
-
-        .btn-remove-condition {
-          background: transparent; border: none; color: #EF4444; padding: 12px; cursor: pointer;
-          border-radius: 8px; transition: all 0.2s;
-        }
-        .btn-remove-condition:hover { background: rgba(239, 68, 68, 0.1); }
-
-        .btn-add-condition {
-          background: transparent; border: 1px dashed rgba(255,255,255,0.2); color: #8A8F98; 
-          padding: 16px; border-radius: 12px; font-weight: 600; cursor: pointer; 
-          display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; 
-          width: 100%; font-size: 14px;
-        }
-        .btn-add-condition:hover { border-color: rgba(255,255,255,0.4); color: white; background: rgba(255,255,255,0.02); }
-
-        /* STEP 3: ACTION */
-        .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-        .action-icon-circle { width: 40px; height: 40px; background: rgba(255,255,255,0.05); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; color: #8A8F98; }
-        .selected .active-icon { background: rgba(59,130,246,0.2); color: #3B82F6; }
-
-        /* STEP 4: DELIVERY */
         .channel-toggles { display: flex; gap: 12px; }
         .channel-toggle { flex: 1; padding: 16px; background: #0A0A0A; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: white; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-        .channel-toggle.selected { background: #3B82F6; border-color: #3B82F6; }
-        
-        .timing-container { background: #0A0A0A; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 0 16px; }
-        .timing-container select { border: none; background: transparent; }
+        .channel-toggle.selected { background: var(--color-accent); border-color: var(--color-accent); }
 
-        /* STEP 5: SPLIT VIEW */
-        .split-view { display: flex; gap: 40px; height: 100%; }
-        .split-left { flex: 1; }
-        .split-right { width: 300px; display: flex; justify-content: center; align-items: center; }
-        
-        .phone-mockup { width: 280px; height: 400px; border: 8px solid #1A1C20; border-radius: 36px; background: #000; position: relative; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+        .split-block { display: flex; gap: 32px; }
+        .sb-left { flex: 1; display: flex; flex-direction: column; }
+        .sb-right { width: 280px; display: flex; justify-content: center; }
+
+        .phone-mockup { width: 260px; height: 380px; border: 8px solid #1A1C20; border-radius: 36px; background: #000; position: relative; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
         .phone-notch { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 120px; height: 24px; background: #1A1C20; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px; z-index: 10; }
         .phone-screen { padding: 40px 16px 16px; height: 100%; display: flex; flex-direction: column; background: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop') center/cover; }
         
@@ -645,30 +616,153 @@ function RuleBuilderModal({ onClose, onComplete }) {
         .mn-header { font-size: 11px; color: #8A8F98; margin-bottom: 8px; }
         .mn-app-icon { width: 16px; height: 16px; background: #E60028; border-radius: 4px; color: white; font-size: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; }
         .mn-title { font-size: 14px; font-weight: 600; color: white; margin-bottom: 4px; }
-        .mn-body { font-size: 13px; color: #D1D5DB; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .mn-body { font-size: 13px; color: #D1D5DB; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 
-        /* STEP 6: IMPACT */
-        .impact-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
-        .impact-card { background: #0A0A0A; border: 1px solid rgba(255,255,255,0.06); padding: 20px; border-radius: 12px; display: flex; flex-direction: column; gap: 8px; }
-        .highlight-card { border-color: rgba(16,185,129,0.3); background: rgba(16,185,129,0.05); }
-        .ic-label { font-size: 12px; color: #8A8F98; text-transform: uppercase; font-weight: 600; }
-        .ic-val { font-size: 24px; font-weight: 700; }
-        .text-success { color: #10B981; }
-        .text-accent { color: #3B82F6; }
-        
-        .rule-summary-box { background: rgba(255,255,255,0.03); border-radius: 16px; padding: 24px; border: 1px solid rgba(255,255,255,0.06); }
-        .rs-title { font-size: 16px; color: white; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 12px; }
-        .rs-statement { font-size: 15px; color: #D1D5DB; line-height: 1.6; margin-bottom: 12px; display: flex; align-items: center; gap: 12px; }
-        .rs-keyword { background: #E60028; color: white; font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 4px; letter-spacing: 0.5px; }
-
-        /* FOOTER */
         .builder-footer { padding: 24px 40px; border-top: 1px solid rgba(255,255,255,0.06); background: #111216; }
-        .btn-primary-hero { display: flex; align-items: center; gap: 8px; padding: 14px 24px; font-size: 15px; font-weight: 600; border-radius: 8px; transition: all 0.2s; border: none; cursor: pointer; }
-        .btn-primary-hero:disabled { opacity: 0.5; cursor: not-allowed; }
-        .glow-btn { box-shadow: 0 0 20px rgba(230,0,40,0.4); }
-        .glow-btn:hover { box-shadow: 0 0 30px rgba(230,0,40,0.6); transform: translateY(-2px); }
-        
+        .btn-secondary { background: transparent; border: 1px solid rgba(255,255,255,0.1); color: white; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s; font-size: 14px; }
+        .btn-secondary:hover { background: rgba(255,255,255,0.05); }
+
       `}</style>
     </div>
   );
+};
+
+function WorkflowReviewModal({ workflow, onClose, onApprove }) {
+  const [config, setConfig] = useState({
+    audience: workflow.audience,
+    trigger: workflow.triggerCondition,
+    channels: workflow.channels,
+    title: workflow.messageTitle,
+    body: workflow.messageBody
+  });
+
+  return (
+    <div className="builder-takeover">
+      <div className="builder-header flex-between">
+        <div className="flex-center gap-md">
+          <button className="icon-btn" onClick={onClose}><X size={20} /></button>
+          <div className="builder-title">
+            <span className="text-muted text-sm font-medium uppercase tracking-wider block mb-4">Review Intervention</span>
+            <h2>{workflow.name}</h2>
+          </div>
+        </div>
+        <div className="header-actions flex-center gap-md">
+          <div className="header-metric">
+            <span className="hm-label">Est. Impact</span>
+            <span className="hm-val text-success">{workflow.impact.revenue || workflow.impact.uplift}</span>
+          </div>
+          <div className="header-metric border-l pl-16 border-muted">
+            <span className="hm-label">AI Confidence</span>
+            <span className="hm-val text-accent">{workflow.confidence}</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="builder-content">
+        <div className="builder-canvas">
+          
+          {/* Block 1: Audience & Trigger */}
+          <div className="ib-block">
+            <div className="ib-header flex-between">
+              <div className="flex-center gap-sm">
+                <Users size={18} className="text-muted"/> <h3>Audience & Trigger</h3>
+              </div>
+            </div>
+            <div className="ib-body">
+              <div className="ai-reasoning-panel mb-16">
+                <Bot size={14} className="text-accent" />
+                <p><strong>AI Reasoning:</strong> {workflow.why}</p>
+              </div>
+              
+              <div className="form-group mb-16">
+                <label className="input-label">Target Audience</label>
+                <input type="text" className="premium-input full-width" value={config.audience} onChange={e => setConfig({...config, audience: e.target.value})} />
+              </div>
+              <div className="form-group">
+                <label className="input-label">Trigger Logic</label>
+                <input type="text" className="premium-input full-width font-mono text-sm" value={config.trigger} onChange={e => setConfig({...config, trigger: e.target.value})} />
+              </div>
+            </div>
+          </div>
+
+          <div className="connector-line"></div>
+
+          {/* Block 2: Channel */}
+          <div className="ib-block">
+            <div className="ib-header flex-between">
+              <div className="flex-center gap-sm">
+                <Network size={18} className="text-muted"/> <h3>Delivery Channel</h3>
+              </div>
+            </div>
+            <div className="ib-body">
+              <div className="channel-toggles">
+                {['WhatsApp', 'Push Notification', 'Email + In-App'].map(ch => (
+                  <button 
+                    key={ch}
+                    className={`channel-toggle ${config.channels.includes(ch) ? 'selected' : ''}`}
+                    onClick={() => setConfig({...config, channels: ch})}
+                  >
+                    {ch}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="connector-line"></div>
+
+          {/* Block 3: Message Editor */}
+          <div className="ib-block split-block">
+            <div className="sb-left">
+              <div className="ib-header mb-16">
+                <div className="flex-center gap-sm">
+                  <MessageSquare size={18} className="text-muted"/> <h3>Intervention Content</h3>
+                </div>
+              </div>
+              <div className="form-group mb-16">
+                <label className="input-label">Notification Title</label>
+                <input type="text" className="premium-input full-width" value={config.title} onChange={e => setConfig({...config, title: e.target.value})} />
+              </div>
+              <div className="form-group">
+                <label className="input-label">Message Body</label>
+                <textarea rows="4" className="premium-textarea full-width" value={config.body} onChange={e => setConfig({...config, body: e.target.value})}></textarea>
+              </div>
+            </div>
+            
+            <div className="sb-right">
+              <div className="phone-mockup">
+                <div className="phone-notch"></div>
+                <div className="phone-screen">
+                  <div className="mock-notification">
+                    <div className="mn-header flex-between">
+                      <div className="flex-center gap-sm">
+                        <div className="mn-app-icon">M</div>
+                        <span>Medibank</span>
+                      </div>
+                      <span>now</span>
+                    </div>
+                    <h4 className="mn-title">{config.title}</h4>
+                    <p className="mn-body">{config.body}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div className="builder-footer flex-between">
+        <button className="btn-secondary" onClick={onClose}>Cancel</button>
+        <div className="flex-center gap-md">
+          <button className="btn-secondary text-warning">Save Tweaks</button>
+          <button className="btn-primary-action btn-warning-gradient" onClick={onApprove}>
+            <Zap size={16} /> Approve & Launch Intervention
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 }
+
+export default ActionStudio;

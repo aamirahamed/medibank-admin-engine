@@ -1,277 +1,365 @@
 import { useState } from 'react';
-import { studentSegments } from '../data/mockData';
 import { 
-  AlertTriangle, 
-  Search, 
-  Filter,
-  TrendingUp,
+  Bot, 
+  Sparkles, 
+  TrendingUp, 
+  AlertCircle, 
+  ArrowRight, 
+  Activity, 
+  Network, 
+  Zap, 
+  Users, 
+  Crosshair, 
+  ChevronRight, 
+  BarChart3, 
+  CheckCircle2, 
+  Microscope,
+  ShieldAlert,
   X,
-  Target,
-  BarChart2,
-  Calendar,
-  Zap,
-  ArrowRight,
-  ShoppingCart,
-  Bell,
-  GraduationCap,
-  Activity,
-  ArrowUpRight,
-  ArrowDownRight
+  GitMerge,
+  PlayCircle,
+  Settings
 } from 'lucide-react';
-
-// Reusable Sparkline component for the "Conversion Potential" stat
-const Sparkline = ({ color }) => {
-  const hexColor = color === 'critical' ? '#FF003C' : color === 'opportunity' ? '#FF8C00' : '#00D26A';
-  return (
-    <svg width="48" height="16" viewBox="0 0 48 16" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginLeft: '12px' }}>
-      <path d="M0 12L8 8L16 14L24 6L32 10L40 2L48 6" stroke={hexColor} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-      <path d="M0 12L8 8L16 14L24 6L32 10L40 2L48 6L48 16H0V12Z" fill={`url(#gradient-${color})`} opacity="0.2"/>
-      <defs>
-        <linearGradient id={`gradient-${color}`} x1="24" y1="2" x2="24" y2="16" gradientUnits="userSpaceOnUse">
-          <stop stopColor={hexColor}/>
-          <stop offset="1" stopColor={hexColor} stopOpacity="0"/>
-        </linearGradient>
-      </defs>
-    </svg>
-  );
-};
+import { 
+  studentSegments,
+  segmentHero,
+  segmentEvolution,
+  behaviouralClusters,
+  microSegments,
+  segmentActions,
+  segmentSummaryStr
+} from '../data/mockData';
 
 const StudentSegments = () => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [toastMessage, setToastMessage] = useState('');
   const [activeSegment, setActiveSegment] = useState(null);
 
-  const criticalSegments = studentSegments.filter(s => s.category === 'critical');
-  const opportunitySegments = studentSegments.filter(s => s.category === 'opportunity');
-  const growthSegments = studentSegments.filter(s => s.category === 'growth');
-
-  const getIconForSegment = (id) => {
-    switch(id) {
-      case 1: return <ShoppingCart size={20} />;
-      case 2: return <Bell size={20} />;
-      case 3: return <GraduationCap size={20} />;
-      case 4: return <Activity size={20} />;
-      default: return <TrendingUp size={20} />;
-    }
+  const triggerAction = (actionName) => {
+    setToastMessage(`Action triggered: ${actionName}`);
+    setTimeout(() => setToastMessage(''), 3000);
   };
 
-  const renderSegmentCard = (segment) => {
-    const isCritical = segment.category === 'critical';
-    const isOpportunity = segment.category === 'opportunity';
-    const isGrowth = segment.category === 'growth';
-    
-    const isTrendPositive = segment.trendDirection === 'positive';
-    const TrendIcon = isTrendPositive ? ArrowUpRight : ArrowDownRight;
-
-    return (
-      <div 
-        key={segment.id} 
-        className={`s-card s-card-${segment.category}`}
-        onClick={() => setActiveSegment(segment)}
-      >
-        {/* Top Header */}
-        <div className="sc-header">
-          <div className={`sc-icon-circle bg-${segment.category}`}>
-            {getIconForSegment(segment.id)}
-          </div>
-          
-          <div className="sc-title-block">
-            <span className={`sc-tag tag-${segment.category}`}>
-              {isCritical && <AlertTriangle size={10} />}
-              {isOpportunity && <Target size={10} />}
-              {isGrowth && <TrendingUp size={10} />}
-              {segment.category}
-            </span>
-            <h3 className="sc-title">{segment.name}</h3>
-            <p className="sc-desc">{segment.description}</p>
-          </div>
-          
-          <div className={`sc-trend trend-${segment.category}`}>
-            <div className="sc-trend-val"><TrendIcon size={14} /> {segment.trend}</div>
-            <div className="sc-trend-context">vs last 7 days</div>
-          </div>
-        </div>
-
-        {/* Middle Stats */}
-        <div className="sc-stats">
-          <div className="sc-stat-block">
-            <span className="sc-stat-label">Total Users</span>
-            <span className="sc-stat-val">{segment.count.toLocaleString()}</span>
-          </div>
-          <div className="sc-stat-block">
-            <span className="sc-stat-label">{isCritical ? 'Value at Risk' : isOpportunity ? 'Est. Opportunity' : 'Impact'}</span>
-            <span className="sc-stat-val">{segment.revenueOpp}</span>
-          </div>
-          <div className="sc-stat-block flex-row-end">
-            <div>
-              <span className="sc-stat-label">Conversion Potential</span>
-              <span className="sc-stat-val">{segment.conversionPotential}</span>
-            </div>
-            <Sparkline color={segment.category} />
-          </div>
-        </div>
-
-        {/* Context */}
-        <div className="sc-context">
-          <div className={`sc-dot dot-${segment.category}`}></div>
-          {segment.behaviourContext}
-        </div>
-
-        {/* Footer */}
-        <div className="sc-footer">
-          <div className="sc-readiness">
-            <div className="sc-readiness-labels">
-              <span>{segment.readinessContext}</span>
-              <span className="sc-readiness-pct">{segment.readinessScore}%</span>
-            </div>
-            <div className="sc-readiness-bar-bg">
-              <div 
-                className={`sc-readiness-bar-fill fill-${segment.category}`} 
-                style={{ width: `${segment.readinessScore}%` }}
-              ></div>
-            </div>
-          </div>
-          <button className={`sc-btn btn-${segment.category}`}>
-            {segment.action} <ArrowRight size={14} />
-          </button>
-        </div>
-      </div>
-    );
+  const handleReviewHeroCohort = () => {
+    setActiveSegment({
+      category: 'opportunity',
+      revenueOpp: segmentHero.revenueOpp,
+      name: segmentHero.title,
+      count: segmentHero.size.replace(' students', ''),
+      confidence: segmentHero.confidence,
+      reviewDetails: segmentHero.reviewDetails
+    });
   };
 
   return (
     <div className="cockpit-container page-layer">
+      {toastMessage && (
+        <div className="toast-notification">
+          <CheckCircle2 size={18} />
+          {toastMessage}
+        </div>
+      )}
+
       <div className="cockpit-header flex-between">
         <div className="header-text">
-          <h1>Student Segments</h1>
-          <p>Conversion opportunity map and strategic cohort analysis.</p>
+          <h1>Behavioural Intelligence</h1>
+          <p>AI-discovered cohorts and strategic opportunity mapping.</p>
         </div>
-        <button className="btn-primary-action red-btn">Create Custom Segment <span style={{fontSize: '18px', fontWeight: '300', marginLeft: '4px'}}>+</span></button>
-      </div>
-
-      <div className="toolbar flex-between">
-        <div className="search-bar">
-          <Search size={16} className="search-icon" />
-          <input 
-            type="text" 
-            placeholder="Search segments..." 
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+        <div className="live-status-badge">
+          <span className="pulse-dot-accent"></span>
+          Segmentation Active
         </div>
-        <button className="btn-filter">
-          <Filter size={16} /> Filter
-        </button>
       </div>
 
-      <div className="segments-layout">
-        {/* CRITICAL */}
-        <section className="segment-group">
-          <div className="group-header">
-            <AlertTriangle size={18} className="text-critical" />
-            <h2>Immediate Action Needed</h2>
-            <span className="group-count text-muted">{criticalSegments.length} segments</span>
-            <div className="group-line line-critical"></div>
+      {/* 1. AI SEGMENTATION INTELLIGENCE HERO */}
+      <section className="segment-hero-section">
+        <div className="hero-glow-bg"></div>
+        <div className="sh-header">
+          <div className="sh-title-group">
+            <Sparkles size={24} className="text-accent" />
+            <h2>{segmentHero.title}</h2>
           </div>
-          <div className="segments-grid">
-            {criticalSegments.map(renderSegmentCard)}
+          <div className="sh-generator">
+            <Bot size={14} /> Generated by <span>{segmentHero.agent}</span>
           </div>
-        </section>
+        </div>
+        
+        <div className="sh-content">
+          <p className="sh-insight">"{segmentHero.insight}"</p>
+          
+          <div className="sh-metrics">
+            <div className="sh-metric-box opp-box">
+              <span className="sh-label">Est. Opportunity</span>
+              <span className="sh-value text-success">{segmentHero.revenueOpp}</span>
+            </div>
+            <div className="sh-metric-box">
+              <span className="sh-label">Cohort Size</span>
+              <span className="sh-value">{segmentHero.size}</span>
+            </div>
+            <div className="sh-metric-box">
+              <span className="sh-label">Conversion Prob.</span>
+              <span className="sh-value">{segmentHero.conversionProb}</span>
+            </div>
+            <div className="sh-metric-box">
+              <span className="sh-label">AI Confidence</span>
+              <span className="sh-value text-accent">{segmentHero.confidence}</span>
+            </div>
+          </div>
+          
+          <div className="sh-actions">
+            <button className="btn-primary-action" onClick={handleReviewHeroCohort}>
+              Review Cohort <ArrowRight size={16} />
+            </button>
+            <button className="btn-outline" onClick={() => triggerAction('Create Campaign')}>Create Campaign</button>
+          </div>
+        </div>
+      </section>
 
-        {/* OPPORTUNITY */}
-        <section className="segment-group">
-          <div className="group-header">
-            <Target size={18} className="text-opportunity" />
-            <h2>Conversion Opportunities</h2>
-            <span className="group-count text-muted">{opportunitySegments.length} segments</span>
-            <div className="group-line line-opportunity"></div>
+      {/* 3. SEGMENT EVOLUTION TIMELINE */}
+      <section className="evolution-section mt-48">
+        <div className="section-head">
+          <div className="head-title">
+            <TrendingUp size={20} className="text-muted" />
+            <h2>Cohort Evolution Tracker</h2>
           </div>
-          <div className="segments-grid">
-            {opportunitySegments.map(renderSegmentCard)}
-          </div>
-        </section>
+        </div>
+        <div className="evolution-grid">
+          {segmentEvolution.map((evo, idx) => (
+            <div key={idx} className={`evo-card elevated-card ${evo.status}`}>
+              <span className="evo-metric">{evo.metric}</span>
+              <div className="evo-trend">
+                {evo.trend.startsWith('+') ? <TrendingUp size={16}/> : <TrendingUp size={16} style={{transform: 'scaleY(-1)'}}/>}
+                {evo.trend}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
 
-        {/* GROWTH */}
-        <section className="segment-group">
-          <div className="group-header">
-            <TrendingUp size={18} className="text-growth" />
-            <h2>Growth Segments</h2>
-            <span className="group-count text-muted">{growthSegments.length} segments</span>
-            <div className="group-line line-growth"></div>
-          </div>
-          <div className="segments-grid">
-            {growthSegments.map(renderSegmentCard)}
-          </div>
-        </section>
+      <div className="split-layout mt-48">
+        {/* LEFT COLUMN */}
+        <div className="column-main">
+          
+          {/* 2. AI-GENERATED SEGMENTS GRID */}
+          <section className="discovered-segments-section">
+            <div className="section-head">
+              <div className="head-title">
+                <Users size={20} className="text-accent" />
+                <h2>AI-Discovered Segments</h2>
+              </div>
+              <span className="ai-badge">Dynamically Generated</span>
+            </div>
+
+            <div className="segments-list">
+              {studentSegments.map(segment => (
+                <div key={segment.id} className={`segment-card elevated-card border-${segment.category}`}>
+                  <div className="seg-header">
+                    <div className="seg-title-row">
+                      <h3 className="seg-name">{segment.name}</h3>
+                      <span className={`seg-tag tag-${segment.category}`}>{segment.revenueOpp}</span>
+                    </div>
+                    <div className="seg-meta">
+                      <div className="seg-agent"><Bot size={12}/> Generated by {segment.generatedBy}</div>
+                      <div className="seg-confidence">Confidence: {segment.confidence}</div>
+                    </div>
+                  </div>
+
+                  <div className="seg-why-box">
+                    <span className="seg-why-label">Why This Segment Exists:</span>
+                    <p>{segment.why}</p>
+                  </div>
+
+                  <div className="seg-body">
+                    <div className="seg-signals">
+                      <span className="seg-section-label"><Activity size={14}/> Behavioural Signals</span>
+                      <div className="signal-tags">
+                        {segment.signals.map((sig, i) => <span key={i} className="signal-tag">{sig}</span>)}
+                      </div>
+                    </div>
+                    
+                    <div className="seg-agents">
+                      <span className="seg-section-label"><Network size={14}/> Collaborating Agents</span>
+                      <div className="agent-tags">
+                        {segment.contributingAgents.map((ag, i) => <span key={i} className="agent-tag">{ag}</span>)}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="seg-footer">
+                    <div className="seg-recommendations">
+                      <span className="seg-section-label text-warning"><Zap size={14}/> Recommended Action</span>
+                      {segment.recommendedActions.map((act, i) => (
+                        <div key={i} className="seg-action-item">
+                          <span className="act-title">{act.title}</span>
+                          <span className="act-impact text-success">{act.impact}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <button className="btn-primary-action" onClick={() => setActiveSegment(segment)}>
+                      Review Segment <ArrowRight size={14} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* 8. AI-RECOMMENDED NEXT ACTIONS PANEL */}
+          <section className="segment-actions-section mt-48">
+            <div className="section-head">
+              <div className="head-title">
+                <Crosshair size={20} className="text-warning" />
+                <h2>Strategic Action Recommendations</h2>
+              </div>
+            </div>
+            
+            <div className="actions-table elevated-card">
+              <div className="at-header">
+                <div className="at-col">Recommendation</div>
+                <div className="at-col text-right">Est. Impact</div>
+                <div className="at-col">Source Agent</div>
+                <div className="at-col text-right">Action</div>
+              </div>
+              <div className="at-body">
+                {segmentActions.map(action => (
+                  <div key={action.id} className="at-row">
+                    <div className="at-col at-title">{action.recommendation}</div>
+                    <div className="at-col text-right text-success font-semibold">{action.impact}</div>
+                    <div className="at-col at-agent"><Bot size={14}/> {action.agent} ({action.confidence})</div>
+                    <div className="at-col text-right">
+                      <button className="btn-outline-small" onClick={() => triggerAction('Approve Action')}>Approve</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        </div>
+
+        {/* RIGHT COLUMN */}
+        <div className="column-side">
+          
+          {/* 4. BEHAVIOURAL SIGNAL VISUALISATION */}
+          <section className="cluster-section">
+             <div className="section-head">
+              <div className="head-title">
+                <Microscope size={20} className="text-muted" />
+                <h2>Behavioural Clusters</h2>
+              </div>
+            </div>
+            <div className="cluster-container elevated-card">
+              {behaviouralClusters.map((cluster) => (
+                <div key={cluster.id} className="cluster-item">
+                  <div className="cl-header">
+                    <span className="cl-name">{cluster.name}</span>
+                    <span className="cl-size">{cluster.size}</span>
+                  </div>
+                  <div className="cl-traits">
+                    {cluster.traits.map((trait, i) => (
+                      <span key={i} className="cl-trait"><ChevronRight size={12}/> {trait}</span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* 5. AI-RECOMMENDED MICRO-SEGMENTS */}
+          <section className="micro-segment-section mt-48">
+            <div className="section-head">
+              <div className="head-title">
+                <Network size={20} className="text-accent" />
+                <h2>Discovered Micro-Segments</h2>
+              </div>
+            </div>
+            <div className="micro-list">
+              {microSegments.map((ms, idx) => (
+                <div key={idx} className="micro-card elevated-card">
+                  <p className="ms-insight">{ms.insight}</p>
+                  <div className="ms-agent"><Bot size={12}/> {ms.agent}</div>
+                </div>
+              ))}
+            </div>
+          </section>
+          
+        </div>
       </div>
 
-      {/* Slide-over Panel for Drill-Down */}
+      {/* 9. EXECUTIVE SEGMENT SUMMARY */}
+      <section className="executive-summary-section mt-48 elevated-card">
+        <div className="es-icon">
+          <BarChart3 size={24} className="text-accent" />
+        </div>
+        <div className="es-content">
+          <span className="es-label">Strategic Segmentation Summary · Generated by Insight Narrator</span>
+          <p className="es-text">"{segmentSummaryStr}"</p>
+        </div>
+      </section>
+
+      {/* INTELLIGENCE SLIDE-OVER PANEL */}
       {activeSegment && (
         <>
           <div className="panel-overlay" onClick={() => setActiveSegment(null)}></div>
-          <div className="slide-over-panel">
-            <div className="panel-top flex-between">
-              <div>
-                <span className={`s-tag tag-${activeSegment.category} mb-8`}>
-                  {activeSegment.category.toUpperCase()}
-                </span>
-                <h2>{activeSegment.name}</h2>
+          <div className="intelligence-panel">
+            <div className="panel-top">
+              <div className="flex-between">
+                <span className={`seg-tag tag-${activeSegment.category} mb-8`}>{activeSegment.revenueOpp}</span>
+                <button className="close-btn" onClick={() => setActiveSegment(null)}><X size={20} /></button>
               </div>
-              <button className="close-btn" onClick={() => setActiveSegment(null)}>
-                <X size={24} />
-              </button>
+              <h2>{activeSegment.name}</h2>
+              <div className="panel-meta mt-12">
+                <span className="flex-center gap-sm text-muted"><Users size={14}/> {activeSegment.count.toLocaleString()} users</span>
+                <span className="flex-center gap-sm text-accent"><Bot size={14}/> {activeSegment.confidence} Confidence</span>
+              </div>
             </div>
 
             <div className="panel-scroll">
-              <div className="p-metrics-grid">
-                <div className="p-metric-box">
-                  <span className="pm-label">Users</span>
-                  <span className="pm-val">{activeSegment.count.toLocaleString()}</span>
-                </div>
-                <div className="p-metric-box">
-                  <span className="pm-label">Impact</span>
-                  <span className={`pm-val text-${activeSegment.category}`}>
-                    {activeSegment.revenueOpp}
-                  </span>
-                </div>
-                <div className="p-metric-box">
-                  <span className="pm-label">Health</span>
-                  <span className="pm-val">{activeSegment.readinessScore}%</span>
-                </div>
-              </div>
-
               <div className="p-section">
-                <h3 className="flex-center gap-sm"><BarChart2 size={16} /> Deep Insights</h3>
-                <ul className="p-list">
-                  {activeSegment.drillDown.insights.map((insight, idx) => (
-                    <li key={idx}>{insight}</li>
+                <h3 className="flex-center gap-sm"><Microscope size={16} className="text-muted"/> Deep Behavioural Analysis</h3>
+                <ul className="insight-list">
+                  {activeSegment.reviewDetails.deepInsights.map((insight, idx) => (
+                    <li key={idx}><span className="bullet"></span>{insight}</li>
                   ))}
                 </ul>
               </div>
 
               <div className="p-section">
-                <h3 className="flex-center gap-sm"><Zap size={16} className="text-warning"/> Suggested Actions</h3>
-                <div className="action-suggestions">
-                  {activeSegment.drillDown.suggestedActions.map((action, idx) => (
-                    <div key={idx} className="action-row flex-between">
-                      <span>{action.title}</span>
-                      <span className={`impact-badge ${action.impact.toLowerCase()}`}>
-                        {action.impact} Impact
-                      </span>
+                <h3 className="flex-center gap-sm"><GitMerge size={16} className="text-muted"/> Cross-Agent Collaboration Log</h3>
+                <div className="agent-timeline">
+                  {activeSegment.reviewDetails.agentLogs.map((log, idx) => (
+                    <div key={idx} className="timeline-item">
+                      <div className="tl-dot"></div>
+                      <div className="tl-content">
+                        <div className="flex-between mb-4">
+                          <span className="tl-agent text-accent">{log.agent}</span>
+                          <span className="tl-time text-muted text-sm">{log.time}</span>
+                        </div>
+                        <p className="tl-action">{log.action}</p>
+                      </div>
                     </div>
                   ))}
                 </div>
               </div>
 
               <div className="p-section">
-                <h3 className="flex-center gap-sm"><Calendar size={16} /> Campaign History</h3>
-                <div className="history-list">
-                  {activeSegment.drillDown.campaignHistory.map((camp, idx) => (
-                    <div key={idx} className="history-row flex-between">
-                      <div>
-                        <strong>{camp.name}</strong>
-                        <div className="text-muted text-sm">{camp.date}</div>
-                      </div>
-                      <div className="text-success font-medium">{camp.conversion} conv.</div>
+                <h3 className="flex-center gap-sm"><TrendingUp size={16} className="text-muted"/> Impact Projection</h3>
+                <div className="impact-box">
+                  <span className="impact-label">{activeSegment.reviewDetails.projectedImpact.metric}</span>
+                  <div className="impact-compare flex-between">
+                    <span className="impact-current">{activeSegment.reviewDetails.projectedImpact.current}</span>
+                    <ArrowRight size={16} className="text-muted" />
+                    <span className="impact-projected text-success">{activeSegment.reviewDetails.projectedImpact.projected}</span>
+                  </div>
+                  <div className="impact-timeframe text-muted text-sm mt-8">{activeSegment.reviewDetails.projectedImpact.timeframe}</div>
+                </div>
+              </div>
+
+              <div className="p-section">
+                <h3 className="flex-center gap-sm"><PlayCircle size={16} className="text-warning"/> Recommended Execution Strategy</h3>
+                <div className="execution-steps">
+                  {activeSegment.reviewDetails.executionSteps.map((step, idx) => (
+                    <div key={idx} className="exec-step">
+                      <div className={`step-num ${step.status === 'ready' ? 'ready' : 'pending'}`}>{step.step}</div>
+                      <div className="step-desc">{step.desc}</div>
                     </div>
                   ))}
                 </div>
@@ -279,8 +367,11 @@ const StudentSegments = () => {
             </div>
 
             <div className="panel-footer">
-              <button className={`sc-btn btn-${activeSegment.category}`} style={{width: '100%'}}>
-                {activeSegment.action} <ArrowRight size={18} />
+              <button className="btn-approve-action w-full" onClick={() => { triggerAction('Strategy Approved & Executed'); setActiveSegment(null); }}>
+                <Zap size={16} /> Approve & Execute Strategy
+              </button>
+              <button className="btn-outline w-full mt-12 flex-center gap-sm">
+                <Settings size={14} /> Adjust Parameters
               </button>
             </div>
           </div>
@@ -288,241 +379,319 @@ const StudentSegments = () => {
       )}
 
       <style>{`
-        /* Colors from Image Reference */
-        :root {
-          --bg-darker: #0B0B10;
-          --card-bg: #111216;
-          --c-critical: #FF003C;
-          --c-opportunity: #FF8C00;
-          --c-growth: #00D26A;
+        /* 
+          DEEP DARK PREMIUM THEME
+          Apple/Stripe/Linear inspired for AI operations
+        */
+        
+        .cockpit-container {
+          --bg-dark: #070709;
+          --card-bg: #101114;
+          --card-border: rgba(255, 255, 255, 0.05);
+          --card-border-hover: rgba(255, 255, 255, 0.12);
           
-          --c-critical-dim: rgba(255, 0, 60, 0.1);
-          --c-opportunity-dim: rgba(255, 140, 0, 0.1);
-          --c-growth-dim: rgba(0, 210, 106, 0.1);
-        }
+          --text-bright: #FFFFFF;
+          --text-main: #E2E8F0;
+          --text-muted: #8B949E;
+          
+          --color-success: #10B981;
+          --color-warning: #F5A623;
+          --color-danger: #EF4444;
+          --color-accent: #8A2BE2; /* Changed to purple for segmentation AI */
+          --color-accent-glow: rgba(138, 43, 226, 0.15);
 
-        .page-layer {
-          background-color: var(--bg-darker);
+          background-color: var(--bg-dark);
+          color: var(--text-main);
+          padding-bottom: 80px;
           min-height: 100vh;
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
-        /* Utilities */
-        .w-full { width: 100%; }
-        .mb-8 { margin-bottom: 8px; }
-        .gap-sm { gap: 6px; }
-        .text-sm { font-size: 12px; }
-        .text-muted { color: #8A8F98; }
-        .text-critical { color: var(--c-critical); }
-        .text-opportunity { color: var(--c-opportunity); }
-        .text-growth { color: var(--c-growth); }
-        .relative { position: relative; }
+        .mt-48 { margin-top: 48px; }
+        .text-bright { color: var(--text-bright); font-weight: 500; }
+        .text-muted { color: var(--text-muted); }
+        .text-warning { color: var(--color-warning); }
+        .text-danger { color: var(--color-danger); }
+        .text-success { color: var(--color-success); }
+        .text-accent { color: var(--color-accent); }
+        .font-semibold { font-weight: 600; }
+
+        h1, h2, h3, h4 { color: var(--text-bright); letter-spacing: -0.02em; margin:0; }
         
-        .header-text h1 { font-size: 28px; font-weight: 600; color: white; margin-bottom: 6px; }
-        .header-text p { color: #8A8F98; font-size: 14px; }
+        .cockpit-header { margin-bottom: 40px; }
+        .header-text h1 { font-size: 32px; font-weight: 700; margin-bottom: 8px; }
+        .header-text p { font-size: 15px; color: var(--text-muted); }
+        
+        .flex-between { display: flex; justify-content: space-between; align-items: center; }
 
-        .red-btn {
-          background: #E60028;
-          color: white;
-          border: none;
-          padding: 10px 16px;
-          border-radius: 6px;
-          font-weight: 600;
-          font-size: 14px;
-          display: flex;
-          align-items: center;
-          cursor: pointer;
-        }
-
-        .toolbar { margin-top: 32px; margin-bottom: 40px; }
-        .search-bar { position: relative; width: 340px; }
-        .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #8A8F98; }
-        .search-bar input {
-          width: 100%; padding: 10px 16px 10px 40px;
-          background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
-          border-radius: 8px; color: white; outline: none; transition: all 0.2s;
-          font-size: 14px;
-        }
-
-        .btn-filter {
+        .live-status-badge {
           display: flex; align-items: center; gap: 8px;
-          background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
-          color: white; padding: 10px 16px; border-radius: 8px;
-          font-size: 14px; font-weight: 500; cursor: pointer;
+          background: rgba(138, 43, 226, 0.1);
+          color: var(--color-accent);
+          padding: 6px 12px; border-radius: 20px;
+          font-size: 13px; font-weight: 600;
+          border: 1px solid rgba(138, 43, 226, 0.2);
+        }
+        .pulse-dot-accent {
+          width: 8px; height: 8px; border-radius: 50%; background: var(--color-accent);
+          box-shadow: 0 0 10px var(--color-accent); animation: pulseAccent 2s infinite;
         }
 
-        /* Group Headers */
-        .segments-layout { display: flex; flex-direction: column; gap: 48px; }
-        .group-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
-        .group-header h2 { font-size: 16px; font-weight: 600; color: white; margin: 0; }
-        .group-count { font-size: 12px; }
-        .group-line { flex: 1; height: 1px; margin-left: 8px; }
-        .line-critical { background: linear-gradient(90deg, rgba(255,0,60,0.5), transparent); }
-        .line-opportunity { background: linear-gradient(90deg, rgba(255,140,0,0.5), transparent); }
-        .line-growth { background: linear-gradient(90deg, rgba(0,210,106,0.5), transparent); }
-
-        .segments-grid {
-          display: grid; grid-template-columns: repeat(auto-fill, minmax(480px, 1fr)); gap: 24px;
+        .section-head {
+          display: flex; justify-content: space-between; align-items: center;
+          margin-bottom: 24px; padding-bottom: 12px;
+          border-bottom: 1px solid rgba(255,255,255,0.04);
         }
+        .head-title { display: flex; align-items: center; gap: 10px; }
+        .head-title h2 { font-size: 18px; font-weight: 600; }
 
-        /* ----- EXACT IMAGE CARD DESIGN ----- */
-        .s-card {
+        .elevated-card {
           background: var(--card-bg);
+          border: 1px solid var(--card-border);
           border-radius: 12px;
-          border: 1px solid rgba(255,255,255,0.05);
-          position: relative;
-          overflow: hidden;
-          cursor: pointer;
-          transition: transform 0.2s, box-shadow 0.2s;
-          padding: 24px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.03);
+          transition: all 0.2s ease;
+        }
+        .elevated-card:hover {
+          border-color: var(--card-border-hover);
+          box-shadow: 0 8px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
+        }
+
+        /* 1. Hero */
+        .segment-hero-section {
+          position: relative; padding: 40px; border-radius: 16px;
+          background: linear-gradient(180deg, #161224 0%, #0D0B14 100%);
+          border: 1px solid rgba(138, 43, 226, 0.2);
+          overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+        .hero-glow-bg {
+          position: absolute; top: -50%; right: -10%; width: 100%; height: 200%;
+          background: radial-gradient(circle at top right, var(--color-accent-glow), transparent 60%);
+          pointer-events: none; z-index: 0;
+        }
+        .sh-header, .sh-content { position: relative; z-index: 1; }
+        .sh-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+        .sh-title-group { display: flex; align-items: center; gap: 12px; }
+        .sh-title-group h2 { font-size: 24px; font-weight: 600; }
+        .sh-generator {
+          display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted);
+          background: rgba(255,255,255,0.05); padding: 4px 12px; border-radius: 20px;
+        }
+        .sh-generator span { color: var(--text-main); font-weight: 500; }
+        
+        .sh-insight { font-size: 22px; line-height: 1.4; color: var(--text-bright); margin-bottom: 32px; font-weight: 400; max-width: 80%; }
+        
+        .sh-metrics { display: flex; gap: 24px; margin-bottom: 32px; }
+        .sh-metric-box {
+          background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05);
+          padding: 16px 24px; border-radius: 10px; display: flex; flex-direction: column; gap: 6px;
+        }
+        .opp-box { background: rgba(16, 185, 129, 0.05); border-color: rgba(16, 185, 129, 0.2); }
+        .sh-label { font-size: 12px; text-transform: uppercase; color: var(--text-muted); font-weight: 600;}
+        .sh-value { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; }
+        
+        .sh-actions { display: flex; gap: 16px; }
+
+        .btn-primary-action {
+          display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+          background: var(--text-bright); color: var(--bg-dark);
+          border: none; padding: 12px 24px; border-radius: 8px;
+          font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+        }
+        .btn-primary-action:hover { background: #E2E8F0; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(255,255,255,0.1); }
+        .btn-outline {
+          background: transparent; color: var(--text-bright);
+          border: 1px solid rgba(255,255,255,0.2); padding: 12px 24px; border-radius: 8px;
+          font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+        }
+        .btn-outline:hover { background: rgba(255,255,255,0.05); }
+
+        /* 3. Evolution */
+        .evolution-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+        .evo-card { padding: 20px; display: flex; flex-direction: column; gap: 12px; border-top: 2px solid transparent; }
+        .evo-card.growing { border-top-color: var(--color-success); }
+        .evo-card.reducing { border-top-color: var(--text-muted); }
+        .evo-card.alert { border-top-color: var(--color-danger); }
+        .evo-metric { font-size: 14px; font-weight: 500; color: var(--text-bright); }
+        .evo-trend { display: flex; align-items: center; gap: 6px; font-size: 18px; font-weight: 700; }
+        .growing .evo-trend { color: var(--color-success); }
+        .reducing .evo-trend { color: var(--text-muted); }
+        .alert .evo-trend { color: var(--color-danger); }
+
+        /* Layout Split */
+        .split-layout { display: grid; grid-template-columns: 1.8fr 1fr; gap: 40px; }
+
+        /* 2. Discovered Segments */
+        .ai-badge {
+          background: rgba(138, 43, 226, 0.1); border: 1px solid rgba(138, 43, 226, 0.2);
+          color: var(--color-accent); padding: 4px 10px; border-radius: 6px;
+          font-size: 12px; font-weight: 600;
         }
         
-        .s-card:hover { transform: translateY(-2px); }
+        .segments-list { display: flex; flex-direction: column; gap: 24px; }
+        .segment-card { padding: 32px; display: flex; flex-direction: column; gap: 24px; border-left: 3px solid transparent; }
+        .border-opportunity { border-left-color: var(--color-success); }
+        .border-critical { border-left-color: var(--color-danger); }
+        .border-growth { border-left-color: var(--color-accent); }
 
-        /* Priority Colors & Glows */
-        .s-card-critical { border-color: rgba(255, 0, 60, 0.3); box-shadow: 0 0 20px rgba(255, 0, 60, 0.1); }
-        .s-card-critical::before {
-          content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-          background: radial-gradient(circle at 40px 40px, rgba(255, 0, 60, 0.1) 0%, transparent 40%);
-          pointer-events: none;
+        .seg-header { display: flex; flex-direction: column; gap: 8px; }
+        .seg-title-row { display: flex; justify-content: space-between; align-items: center; }
+        .seg-name { font-size: 20px; font-weight: 600; }
+        .seg-tag { font-size: 13px; font-weight: 700; padding: 4px 10px; border-radius: 6px; }
+        .tag-opportunity { background: rgba(16, 185, 129, 0.1); color: var(--color-success); }
+        .tag-critical { background: rgba(239, 68, 68, 0.1); color: var(--color-danger); }
+        .tag-growth { background: rgba(138, 43, 226, 0.1); color: var(--color-accent); }
+        
+        .seg-meta { display: flex; gap: 16px; font-size: 12px; color: var(--text-muted); font-weight: 500; }
+        .seg-agent { display: flex; align-items: center; gap: 4px; }
+        
+        .seg-why-box { background: rgba(255,255,255,0.02); padding: 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); }
+        .seg-why-label { font-size: 12px; text-transform: uppercase; color: var(--text-muted); font-weight: 600; margin-bottom: 8px; display: block; }
+        .seg-why-box p { font-size: 15px; color: var(--text-bright); margin: 0; line-height: 1.5; }
+
+        .seg-body { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        .seg-section-label { display: flex; align-items: center; gap: 6px; font-size: 12px; text-transform: uppercase; color: var(--text-muted); font-weight: 600; margin-bottom: 12px; }
+        
+        .signal-tags, .agent-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+        .signal-tag { background: rgba(255,255,255,0.05); padding: 6px 12px; border-radius: 20px; font-size: 12px; color: var(--text-main); }
+        .agent-tag { background: rgba(138, 43, 226, 0.08); border: 1px solid rgba(138, 43, 226, 0.2); padding: 6px 12px; border-radius: 20px; font-size: 12px; color: var(--color-accent); }
+
+        .seg-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 8px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.05); }
+        .seg-recommendations { flex: 1; }
+        .seg-action-item { display: flex; flex-direction: column; gap: 4px; }
+        .act-title { font-size: 15px; font-weight: 500; color: var(--text-bright); }
+        .act-impact { font-size: 14px; font-weight: 600; }
+
+        /* 8. Action Table */
+        .actions-table { padding: 12px 24px; }
+        .at-header {
+          display: grid; grid-template-columns: 2fr 1fr 1fr 0.5fr;
+          padding: 16px 0; border-bottom: 1px solid var(--card-border);
+          font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;
+        }
+        .at-row {
+          display: grid; grid-template-columns: 2fr 1fr 1fr 0.5fr;
+          padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+          align-items: center; transition: background 0.2s;
+        }
+        .at-row:last-child { border-bottom: none; }
+        .at-col { display: flex; flex-direction: column; justify-content: center; font-size: 14px; }
+        .text-right { text-align: right; align-items: flex-end; }
+        .at-title { color: var(--text-bright); font-weight: 500; }
+        .at-agent { display: flex; flex-direction: row; align-items: center; gap: 6px; color: var(--text-muted); font-size: 12px; }
+        .btn-outline-small {
+          background: transparent; border: 1px solid var(--color-success); color: var(--color-success);
+          padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;
+        }
+
+        /* 4. Clusters */
+        .cluster-container { padding: 24px; display: flex; flex-direction: column; gap: 20px; }
+        .cluster-item {
+          background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);
+          padding: 20px; border-radius: 10px;
+        }
+        .cl-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .cl-name { font-size: 16px; font-weight: 600; color: var(--text-bright); }
+        .cl-size { font-size: 14px; font-weight: 700; color: var(--color-accent); background: rgba(138, 43, 226, 0.1); padding: 4px 10px; border-radius: 6px; }
+        .cl-traits { display: flex; flex-direction: column; gap: 8px; }
+        .cl-trait { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-main); }
+
+        /* 5. Micro Segments */
+        .micro-list { display: flex; flex-direction: column; gap: 16px; }
+        .micro-card { padding: 20px; border-left: 2px solid var(--color-accent); }
+        .ms-insight { font-size: 14px; line-height: 1.5; color: var(--text-bright); margin-bottom: 12px; font-style: italic; }
+        .ms-agent { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
+
+        /* 9. Executive Summary */
+        .executive-summary-section {
+          padding: 32px; display: flex; gap: 24px; align-items: flex-start;
+          background: linear-gradient(90deg, rgba(138, 43, 226, 0.05) 0%, transparent 100%);
+          border-left: 2px solid var(--color-accent);
+        }
+        .es-content { display: flex; flex-direction: column; gap: 8px; }
+        .es-label { font-size: 12px; text-transform: uppercase; font-weight: 600; color: var(--text-muted); letter-spacing: 0.5px; }
+        .es-text { font-size: 18px; font-weight: 400; line-height: 1.6; color: var(--text-bright); font-style: italic; margin: 0; }
+
+        .toast-notification {
+          position: fixed; bottom: 30px; right: 30px; z-index: 100;
+          background: var(--text-bright); color: var(--bg-dark);
+          padding: 12px 24px; border-radius: 8px; font-size: 14px; font-weight: 600;
+          display: flex; align-items: center; gap: 10px;
+          box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+          animation: slideUp 0.3s ease forwards;
+        }
+
+        @keyframes pulseAccent {
+          0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(138, 43, 226, 0.7); }
+          70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(138, 43, 226, 0); }
+          100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(138, 43, 226, 0); }
         }
         
-        .s-card-opportunity { border-color: rgba(255, 140, 0, 0.3); box-shadow: 0 0 20px rgba(255, 140, 0, 0.1); }
-        .s-card-opportunity::before {
-          content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-          background: radial-gradient(circle at 40px 40px, rgba(255, 140, 0, 0.1) 0%, transparent 40%);
-          pointer-events: none;
-        }
-        
-        .s-card-growth { border-color: rgba(0, 210, 106, 0.3); box-shadow: 0 0 20px rgba(0, 210, 106, 0.1); }
-        .s-card-growth::before {
-          content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-          background: radial-gradient(circle at 40px 40px, rgba(0, 210, 106, 0.1) 0%, transparent 40%);
-          pointer-events: none;
+        @keyframes slideUp {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Card Header */
-        .sc-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 24px; position: relative; z-index: 2; }
-        
-        .sc-icon-circle {
-          width: 48px; height: 48px; border-radius: 50%;
-          display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-        }
-        .bg-critical { background: var(--c-critical-dim); color: var(--c-critical); box-shadow: 0 0 15px rgba(255,0,60,0.2); }
-        .bg-opportunity { background: var(--c-opportunity-dim); color: var(--c-opportunity); box-shadow: 0 0 15px rgba(255,140,0,0.2); }
-        .bg-growth { background: var(--c-growth-dim); color: var(--c-growth); box-shadow: 0 0 15px rgba(0,210,106,0.2); }
-
-        .sc-title-block { flex: 1; }
-        .sc-tag {
-          display: inline-flex; align-items: center; gap: 4px;
-          font-size: 10px; font-weight: 700; text-transform: uppercase;
-          padding: 2px 6px; border-radius: 4px; margin-bottom: 8px; letter-spacing: 0.5px;
-        }
-        .tag-critical { background: var(--c-critical); color: white; }
-        .tag-opportunity { background: var(--c-opportunity); color: black; }
-        .tag-growth { background: var(--c-growth); color: black; }
-
-        .sc-title { font-size: 18px; font-weight: 600; color: white; margin-bottom: 4px; letter-spacing: -0.3px; }
-        .sc-desc { font-size: 13px; color: #8A8F98; line-height: 1.4; }
-
-        .sc-trend { display: flex; flex-direction: column; align-items: flex-end; }
-        .sc-trend-val { display: flex; align-items: center; gap: 2px; font-size: 16px; font-weight: 600; }
-        .sc-trend-context { font-size: 11px; color: #8A8F98; margin-top: 2px; }
-        .trend-critical { color: var(--c-critical); }
-        .trend-opportunity { color: var(--c-opportunity); }
-        .trend-growth { color: var(--c-growth); }
-
-        /* Card Middle Stats */
-        .sc-stats {
-          display: flex; border-top: 1px solid rgba(255,255,255,0.06); border-bottom: 1px solid rgba(255,255,255,0.06);
-          padding: 20px 0; margin-bottom: 16px; position: relative; z-index: 2;
-        }
-        .sc-stat-block { flex: 1; display: flex; flex-direction: column; gap: 6px; border-right: 1px solid rgba(255,255,255,0.06); padding: 0 16px; }
-        .sc-stat-block:first-child { padding-left: 0; }
-        .sc-stat-block:last-child { border-right: none; padding-right: 0; flex: 1.2; }
-        .flex-row-end { display: flex; flex-direction: row; align-items: flex-end; justify-content: space-between; }
-        
-        .sc-stat-label { font-size: 12px; color: #8A8F98; font-weight: 500; }
-        .sc-stat-val { font-size: 20px; font-weight: 600; color: white; letter-spacing: -0.5px; }
-
-        /* Context */
-        .sc-context { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #D1D5DB; margin-bottom: 24px; position: relative; z-index: 2; }
-        .sc-dot { width: 6px; height: 6px; border-radius: 50%; }
-        .dot-critical { background: var(--c-critical); box-shadow: 0 0 5px var(--c-critical); }
-        .dot-opportunity { background: var(--c-opportunity); box-shadow: 0 0 5px var(--c-opportunity); }
-        .dot-growth { background: var(--c-growth); box-shadow: 0 0 5px var(--c-growth); }
-
-        /* Footer */
-        .sc-footer { display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 2; }
-        .sc-readiness { flex: 1; margin-right: 32px; }
-        .sc-readiness-labels { display: flex; justify-content: space-between; font-size: 12px; color: #8A8F98; margin-bottom: 6px; }
-        .sc-readiness-pct { font-weight: 600; color: white; }
-        
-        .sc-readiness-bar-bg { width: 100%; height: 4px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden; }
-        .sc-readiness-bar-fill { height: 100%; border-radius: 2px; }
-        .fill-critical { background: var(--c-critical); box-shadow: 0 0 8px var(--c-critical); }
-        .fill-opportunity { background: var(--c-opportunity); box-shadow: 0 0 8px var(--c-opportunity); }
-        .fill-growth { background: var(--c-growth); box-shadow: 0 0 8px var(--c-growth); }
-
-        .sc-btn {
-          display: flex; align-items: center; gap: 8px;
-          padding: 10px 20px; border-radius: 6px; border: none;
-          font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s;
-        }
-        .btn-critical { background: var(--c-critical); color: white; }
-        .btn-critical:hover { background: #E60036; box-shadow: 0 0 15px rgba(255,0,60,0.4); }
-        .btn-opportunity { background: var(--c-opportunity); color: black; }
-        .btn-opportunity:hover { background: #FFA033; box-shadow: 0 0 15px rgba(255,140,0,0.4); }
-        .btn-growth { background: var(--c-growth); color: black; }
-        .btn-growth:hover { background: #1AD87B; box-shadow: 0 0 15px rgba(0,210,106,0.4); }
-
-        /* Slide-over Panel (Reused from before) */
+        /* Intelligence Panel */
         .panel-overlay {
           position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-          background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); z-index: 40;
+          background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 100;
           animation: fadeIn 0.2s ease;
         }
-        .slide-over-panel {
-          position: fixed; top: 0; right: 0; bottom: 0; width: 520px; max-width: 100%;
-          background: #111216; border-left: 1px solid rgba(255,255,255,0.08);
-          z-index: 50; display: flex; flex-direction: column;
+        .intelligence-panel {
+          position: fixed; top: 0; right: 0; bottom: 0; width: 480px; max-width: 100%;
+          background: #0D0E12; border-left: 1px solid rgba(255,255,255,0.08);
+          z-index: 110; display: flex; flex-direction: column;
+          box-shadow: -20px 0 60px rgba(0,0,0,0.8);
           animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-          box-shadow: -20px 0 60px rgba(0,0,0,0.6);
         }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
 
-        .panel-top { padding: 32px; border-bottom: 1px solid rgba(255,255,255,0.06); background: #0A0A0A; }
-        .panel-top h2 { font-size: 24px; font-weight: 700; margin: 0; color: #FFFFFF; }
-        .close-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #D1D5DB; cursor: pointer; padding: 8px; border-radius: 50%; transition: all 0.2s; }
+        .panel-top { padding: 32px; border-bottom: 1px solid rgba(255,255,255,0.06); background: #070709; }
+        .panel-top h2 { font-size: 24px; font-weight: 700; margin-top: 16px; line-height: 1.2; }
+        .mb-8 { margin-bottom: 8px; }
+        .mt-12 { margin-top: 12px; }
+        .mb-4 { margin-bottom: 4px; }
+        .mt-8 { margin-top: 8px; }
+        .gap-sm { gap: 6px; }
+        .text-sm { font-size: 12px; }
+        .flex-center { display: flex; align-items: center; }
+        .w-full { width: 100%; justify-content: center; }
+
+        .close-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-muted); cursor: pointer; padding: 6px; border-radius: 50%; transition: all 0.2s; display: flex; align-items: center; justify-content: center; }
         .close-btn:hover { background: rgba(255,255,255,0.1); color: white; transform: rotate(90deg); }
 
+        .panel-meta { display: flex; gap: 16px; font-size: 13px; font-weight: 500; }
+
         .panel-scroll { flex: 1; overflow-y: auto; padding: 32px; display: flex; flex-direction: column; gap: 40px; }
-        
-        .p-metrics-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
-        .p-metric-box {
-          background: rgba(255,255,255,0.02); padding: 16px; border-radius: 12px;
-          display: flex; flex-direction: column; gap: 6px; text-align: center;
-          border: 1px solid rgba(255,255,255,0.05);
-        }
-        .pm-label { font-size: 12px; color: #8A8F98; text-transform: uppercase; font-weight: 600; }
-        .pm-val { font-size: 22px; font-weight: 700; color: #FFFFFF; letter-spacing: -0.5px; }
 
-        .p-section h3 { font-size: 16px; margin-bottom: 16px; color: #FFFFFF; justify-content: flex-start; }
-        .p-list { margin: 0; padding-left: 20px; color: #D1D5DB; font-size: 14px; line-height: 1.6; }
-        .p-list li { margin-bottom: 12px; }
+        .p-section h3 { font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 16px; color: var(--text-muted); font-weight: 600; }
 
-        .action-suggestions { display: flex; flex-direction: column; gap: 12px; }
-        .action-row {
-          padding: 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
-          border-radius: 10px; font-size: 14px; font-weight: 500; color: #FFFFFF;
-        }
+        .insight-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; }
+        .insight-list li { display: flex; gap: 10px; font-size: 14px; line-height: 1.5; color: var(--text-bright); }
+        .bullet { width: 6px; height: 6px; background: var(--text-muted); border-radius: 50%; margin-top: 8px; flex-shrink: 0; }
 
-        .history-list { display: flex; flex-direction: column; }
-        .history-row { padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 14px; }
-        .history-row:last-child { border-bottom: none; }
+        .agent-timeline { display: flex; flex-direction: column; gap: 20px; position: relative; padding-left: 10px; }
+        .agent-timeline::before { content: ''; position: absolute; left: 13px; top: 6px; bottom: 0; width: 1px; background: rgba(255,255,255,0.1); }
+        .timeline-item { position: relative; padding-left: 24px; }
+        .tl-dot { position: absolute; left: -1px; top: 6px; width: 8px; height: 8px; border-radius: 50%; background: var(--color-accent); box-shadow: 0 0 8px var(--color-accent); }
+        .tl-agent { font-size: 12px; font-weight: 600; }
+        .tl-action { font-size: 14px; color: var(--text-main); margin: 0; line-height: 1.4; }
 
-        .panel-footer { padding: 24px 32px; border-top: 1px solid rgba(255,255,255,0.06); background: #0A0A0A; }
+        .impact-box { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); padding: 20px; border-radius: 12px; }
+        .impact-label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; font-weight: 600; margin-bottom: 12px; display: block; }
+        .impact-compare { padding: 12px 16px; background: rgba(0,0,0,0.3); border-radius: 8px; font-size: 24px; font-weight: 700; font-family: monospace; }
 
+        .execution-steps { display: flex; flex-direction: column; gap: 12px; }
+        .exec-step { display: flex; align-items: center; gap: 16px; background: rgba(255,255,255,0.03); padding: 16px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); }
+        .step-num { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+        .step-num.ready { background: rgba(16, 185, 129, 0.2); color: var(--color-success); border: 1px solid var(--color-success); }
+        .step-num.pending { background: rgba(255,255,255,0.05); color: var(--text-muted); border: 1px solid rgba(255,255,255,0.1); }
+        .step-desc { font-size: 14px; color: var(--text-bright); font-weight: 500; }
+
+        .panel-footer { padding: 24px 32px; border-top: 1px solid rgba(255,255,255,0.06); background: #070709; }
+        .btn-approve-action { display: flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #F5A623 0%, #D48806 100%); color: #000; border: none; padding: 14px 24px; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 15px rgba(245, 166, 35, 0.3); }
+        .btn-approve-action:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(245, 166, 35, 0.4); }
       `}</style>
     </div>
   );

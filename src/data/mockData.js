@@ -14,9 +14,42 @@ export const todaysPriorities = [
 ];
 
 export const nextBestActions = [
-  { id: 1, title: 'Launch "Graduation Ready" Push', target: '2,100 graduating students', impact: '+3.2% Conversion Lift', priority: 'High', reasoning: 'AI models show 80% propensity to convert if nudged 45 days prior to expiry.', actionText: 'Execute Nudge' },
-  { id: 2, title: 'Automated Check-in Email', target: '840 at-risk users', impact: '-12% Churn Risk', priority: 'Medium', reasoning: 'Users haven\'t opened the app in 14 days; personalized check-in increases retention.', actionText: 'Start Sequence' },
-  { id: 3, title: 'Invite to "Navigating Healthcare" Webinar', target: 'New Arrivals Cohort', impact: '+15% Engagement', priority: 'Low', reasoning: 'Early engagement drives long-term brand loyalty.', actionText: 'Send Invites' }
+  { 
+    id: 1, 
+    title: 'Launch "Graduation Ready" Push', 
+    target: '2,100 graduating students', 
+    impact: '+3.2% Conversion Lift', 
+    impactValue: '+$240K',
+    priority: 'High', 
+    confidence: '91%',
+    agent: 'Conversion Agent',
+    reasoning: 'Students repeatedly explored OVHC pricing and attended visa webinars.', 
+    actionText: 'Review Recommendation' 
+  },
+  { 
+    id: 2, 
+    title: 'Deploy WhatsApp Onboarding Sequence', 
+    target: '840 at-risk users', 
+    impact: '+18% Activation', 
+    impactValue: '+$180K',
+    priority: 'High', 
+    confidence: '94%',
+    agent: 'Activation Agent',
+    reasoning: 'OTP verification failures impacting onboarding performance. WhatsApp outperforming email by 24%.', 
+    actionText: 'Review & Approve' 
+  },
+  { 
+    id: 3, 
+    title: 'Invite to "Navigating Healthcare" Webinar', 
+    target: 'New Arrivals Cohort', 
+    impact: '+15% Engagement', 
+    impactValue: 'LTV Boost',
+    priority: 'Medium', 
+    confidence: '88%',
+    agent: 'Community Agent',
+    reasoning: 'Students participating in community groups explore OVHC earlier.', 
+    actionText: 'Review Recommendation' 
+  }
 ];
 
 export const behaviourInsights = [
@@ -34,170 +67,149 @@ export const momentTracker = {
 export const studentSegments = [
   {
     id: 1,
-    name: 'Dropped from Conversion Flow',
-    description: 'Users dropped at pricing or checkout in the last 48 hours.',
-    category: 'critical',
-    count: 320,
-    revenueOpp: '$210K',
+    name: 'High-Intent OVHC Explorers',
+    description: 'Highly active students exploring pricing and options.',
+    generatedBy: 'Segmentation Agent',
+    category: 'opportunity',
+    count: 3450,
+    revenueOpp: '+$2.1M',
     conversionPotential: 'High',
-    behaviourContext: 'Dropped at pricing · Within last 48h',
-    trend: '+15%',
-    trendDirection: 'negative', // Note: negative business meaning, but we display red
-    readinessScore: 82,
-    readinessContext: 'Readiness to convert',
-    action: 'Recover 320 users',
-    drillDown: {
-      insights: [
-        'Highest drop-off occurs on the "Compare Plans" step.',
-        '55% of this cohort are nursing students.',
-        'Majority are accessing via iOS devices.'
+    trend: '+12%',
+    trendDirection: 'positive',
+    why: 'Users in this segment repeatedly explored OVHC pricing and participated in visa-related events.',
+    signals: ['3+ OVHC page views', 'Visa webinar attendance', 'Active > 4x per week'],
+    confidence: '94%',
+    contributingAgents: ['Segmentation Agent', 'Conversion Agent'],
+    recommendedActions: [
+      { title: 'Trigger graduate transition campaign', impact: '+$180K', agent: 'Conversion Agent' }
+    ],
+    reviewDetails: {
+      deepInsights: [
+        '55% of this cohort are RMIT postgraduate nursing students.',
+        'Highest exploration occurs on the "Compare Plans" step between 8 PM and 10 PM.',
+        'Majority are accessing via iOS devices and checking rewards concurrently.'
       ],
-      suggestedActions: [
-        { title: 'Send abandoned cart email', impact: 'High' },
-        { title: 'Trigger in-app discount notification', impact: 'Medium' }
+      agentLogs: [
+        { agent: 'Segmentation Agent', action: 'Clustered 3,450 users based on high weekly activity and visa status.', time: '2h ago' },
+        { agent: 'Conversion Agent', action: 'Scored propensity to convert at 82% based on pricing page dwell time.', time: '1h ago' },
+        { agent: 'Campaign Optimisation Agent', action: 'Determined in-app notifications outperform email by 3x for this cohort.', time: '30m ago' }
       ],
-      campaignHistory: [
-        { name: 'End of Semester Nudge', date: 'Oct 12', conversion: '4.2%' }
+      projectedImpact: { metric: 'Conversion Rate', current: '4.2%', projected: '7.4%', timeframe: 'Next 14 Days' },
+      executionSteps: [
+        { step: 1, desc: 'Draft "Graduate Transition" in-app offer', status: 'ready' },
+        { step: 2, desc: 'Target 3,450 users via iOS push', status: 'pending' },
+        { step: 3, desc: 'Monitor conversion vs control group', status: 'pending' }
       ]
     }
   },
   {
     id: 2,
-    name: 'Low Engagement, At Risk',
-    description: 'Inactive users for 14+ days with unread notifications.',
+    name: 'Silent Churn Risk Cohort',
+    description: 'Inactive users showing dropping engagement signals.',
+    generatedBy: 'Retention Risk Agent',
     category: 'critical',
     count: 840,
-    revenueOpp: 'Churn Risk',
-    conversionPotential: 'Medium',
-    behaviourContext: 'Inactive 14+ days · Ignoring notifications',
+    revenueOpp: '-$420K Risk',
+    conversionPotential: 'Low',
     trend: '-5%',
     trendDirection: 'negative',
-    readinessScore: 24,
-    readinessContext: 'Engagement health',
-    action: 'Re-activate users',
-    drillDown: {
-      insights: [
-        'Engagement drops sharply after the first 30 days of arrival.',
-        'Push notification open rates are below 5% for this group.'
+    why: 'Engagement dropped sharply after 30 days. Consistent ignoring of push notifications.',
+    signals: ['0 logins in 14 days', 'Unread notifications > 5', 'Completed onboarding'],
+    confidence: '88%',
+    contributingAgents: ['Retention Risk Agent', 'Activation Agent'],
+    recommendedActions: [
+      { title: 'Deploy WhatsApp re-engagement sequence', impact: 'Recover 200 users', agent: 'Campaign Optimisation Agent' }
+    ],
+    reviewDetails: {
+      deepInsights: [
+        'Engagement drops sharply exactly 30 days after arrival in Australia.',
+        'Push notification open rates are below 5% for this specific group.',
+        'Most users in this cohort haven\'t completed their Medibank profile.'
       ],
-      suggestedActions: [
-        { title: 'Deploy "We miss you" re-engagement sequence', impact: 'High' },
-        { title: 'Offer double health points for next login', impact: 'Medium' }
+      agentLogs: [
+        { agent: 'Retention Risk Agent', action: 'Identified 840 users with dropping engagement signals over 14 days.', time: '5h ago' },
+        { agent: 'Activation Agent', action: 'Correlated drop-off with incomplete profiles and unread notifications.', time: '4h ago' },
+        { agent: 'Campaign Optimisation Agent', action: 'Recommended WhatsApp sequence to bypass ignored push notifications.', time: '3h ago' }
       ],
-      campaignHistory: [
-        { name: 'Re-engagement Q3', date: 'Sep 01', conversion: '1.8%' }
+      projectedImpact: { metric: 'Re-activation Rate', current: '1.8%', projected: '12.5%', timeframe: 'Next 7 Days' },
+      executionSteps: [
+        { step: 1, desc: 'Generate personalized WhatsApp templates', status: 'ready' },
+        { step: 2, desc: 'Deploy sequence to 840 users', status: 'pending' },
+        { step: 3, desc: 'Track profile completion events', status: 'pending' }
       ]
     }
   },
   {
     id: 3,
-    name: 'Graduating in 60 Days',
-    description: 'Highly active students nearing the end of their studies.',
-    category: 'opportunity',
-    count: 2100,
-    revenueOpp: '$1.4M',
+    name: 'Community Ambassadors',
+    description: 'Highly active in forums, driving peer referrals.',
+    generatedBy: 'Referral Agent',
+    category: 'growth',
+    count: 450,
+    revenueOpp: 'High LTV',
     conversionPotential: 'High',
-    behaviourContext: 'Active weekly · Haven\'t explored OVHC yet',
-    trend: '+40%',
+    trend: '+18%',
     trendDirection: 'positive',
-    readinessScore: 88,
-    readinessContext: 'Readiness to convert',
-    action: 'Convert 2,100 users',
-    drillDown: {
-      insights: [
-        'This cohort has a 80% propensity to convert if nudged correctly.',
-        'Most frequent app usage is checking rewards and health points.'
+    why: 'Consistently answering forum questions and sharing referral links with peers.',
+    signals: ['10+ forum posts', '3+ successful referrals', 'High MediGuide usage'],
+    confidence: '96%',
+    contributingAgents: ['Referral Agent', 'Community Agent'],
+    recommendedActions: [
+      { title: 'Grant "Community Ambassador" status', impact: '+35% referrals', agent: 'Referral Agent' }
+    ],
+    reviewDetails: {
+      deepInsights: [
+        'Generates 3x more referrals than average users.',
+        'Often answers questions in the "Navigating Healthcare" forum.',
+        'Highly responsive to gamification and point-based rewards.'
       ],
-      suggestedActions: [
-        { title: 'Push OVHC "Graduation Ready" offer', impact: 'High' },
-        { title: 'Invite to "Graduate Visa Q&A" webinar', impact: 'High' }
+      agentLogs: [
+        { agent: 'Referral Agent', action: 'Tracked a 38% increase in successful referrals from this cohort.', time: '1d ago' },
+        { agent: 'Community Agent', action: 'Identified top 10% most active forum posters.', time: '20h ago' },
+        { agent: 'Campaign Optimisation Agent', action: 'Suggested "Ambassador Status" badge to incentivize further sharing.', time: '18h ago' }
       ],
-      campaignHistory: [
-        { name: 'Early Bird Graduate Offer', date: 'Oct 01', conversion: '12.4%' }
+      projectedImpact: { metric: 'Referral Volume', current: '120/mo', projected: '250/mo', timeframe: 'Next 30 Days' },
+      executionSteps: [
+        { step: 1, desc: 'Create "Community Ambassador" badge', status: 'ready' },
+        { step: 2, desc: 'Send exclusive event invitations to 450 users', status: 'pending' },
+        { step: 3, desc: 'Increase referral bonus by 1.5x for this cohort', status: 'pending' }
       ]
     }
   },
   {
     id: 4,
-    name: 'High Engagement, Not Converted',
-    description: 'Engaged users exploring app features but not OVHC.',
-    category: 'opportunity',
-    count: 3450,
-    revenueOpp: '$2.1M',
+    name: 'Activation Bottleneck Cohort',
+    description: 'Users who dropped off during OTP verification.',
+    generatedBy: 'Activation Agent',
+    category: 'critical',
+    count: 1200,
+    revenueOpp: 'Blocked Value',
     conversionPotential: 'Medium',
-    behaviourContext: 'Exploring content · Checking app weekly',
-    trend: '+12%',
-    trendDirection: 'positive',
-    readinessScore: 65,
-    readinessContext: 'Readiness to convert',
-    action: 'Nudge to convert',
-    drillDown: {
-      insights: [
-        'High engagement with Mediguide AI assistant.',
-        'Price sensitivity seems to be the main blocker.'
+    trend: '+8%',
+    trendDirection: 'negative',
+    why: 'High failure rate during international phone verification step.',
+    signals: ['Failed OTP 2+ times', 'Abandoned at step 2', 'App deleted within 24h'],
+    confidence: '92%',
+    contributingAgents: ['Activation Agent', 'Segmentation Agent'],
+    recommendedActions: [
+      { title: 'Switch to email verification fallback', impact: '+12% activation', agent: 'Activation Agent' }
+    ],
+    reviewDetails: {
+      deepInsights: [
+        'High failure rate during international phone verification step.',
+        '60% of failures are from users with Indian country codes.',
+        'Users abandoning at this step rarely return without intervention.'
       ],
-      suggestedActions: [
-        { title: 'Trigger value-prop educational carousel', impact: 'Medium' },
-        { title: 'Highlight "Extras" benefits via email', impact: 'Medium' }
+      agentLogs: [
+        { agent: 'Activation Agent', action: 'Flagged 1,200 users stuck at OTP verification step 2.', time: '3h ago' },
+        { agent: 'Segmentation Agent', action: 'Identified correlation with specific international country codes.', time: '2h ago' },
+        { agent: 'Campaign Optimisation Agent', action: 'Recommended immediate switch to email verification fallback.', time: '1h ago' }
       ],
-      campaignHistory: [
-        { name: 'Health Rewards Promo', date: 'Aug 15', conversion: '6.7%' }
-      ]
-    }
-  },
-  {
-    id: 5,
-    name: 'New Arrivals Cohort',
-    description: 'Arrived in Australia in the last 30 days. High checklist usage.',
-    category: 'growth',
-    count: 4200,
-    revenueOpp: 'LTV Building',
-    conversionPotential: 'Low',
-    behaviourContext: 'Arrived <30 days · High checklist usage',
-    trend: '+22%',
-    trendDirection: 'positive',
-    readinessScore: 15,
-    readinessContext: 'Readiness to convert',
-    action: 'Foster engagement',
-    drillDown: {
-      insights: [
-        '90% completion rate on the Pre-Arrival Checklist.',
-        'High interest in finding local GPs and clinics.'
-      ],
-      suggestedActions: [
-        { title: 'Send "First 30 Days" milestone badge', impact: 'Medium' },
-        { title: 'Invite to University-specific community groups', impact: 'High' }
-      ],
-      campaignHistory: [
-        { name: 'Welcome to Aus Onboarding', date: 'Continuous', conversion: 'N/A' }
-      ]
-    }
-  },
-  {
-    id: 6,
-    name: 'Community Leaders',
-    description: 'Highly active in community forums and events. Frequently refers friends.',
-    category: 'growth',
-    count: 450,
-    revenueOpp: 'Advocacy',
-    conversionPotential: 'High',
-    behaviourContext: 'High forum activity · Drives referrals',
-    trend: 'Stable',
-    trendDirection: 'neutral',
-    readinessScore: 95,
-    readinessContext: 'Readiness to convert',
-    action: 'Reward advocacy',
-    drillDown: {
-      insights: [
-        'Generates 3x more referrals than average users.',
-        'Often answers questions in the "Navigating Healthcare" forum.'
-      ],
-      suggestedActions: [
-        { title: 'Grant "Community Ambassador" status', impact: 'High' },
-        { title: 'Send exclusive event invitations', impact: 'Medium' }
-      ],
-      campaignHistory: [
-        { name: 'Refer-a-friend Boost', date: 'Jul 20', conversion: '24.5%' }
+      projectedImpact: { metric: 'Activation Rate', current: '68%', projected: '80%', timeframe: 'Immediate' },
+      executionSteps: [
+        { step: 1, desc: 'Enable email verification fallback routing', status: 'ready' },
+        { step: 2, desc: 'Send recovery email to 1,200 stuck users', status: 'pending' },
+        { step: 3, desc: 'Monitor step 2 completion rates', status: 'pending' }
       ]
     }
   }
@@ -224,3 +236,184 @@ export const recentActivity = [
   { id: 3, user: 'Segment "At Risk"', action: 'Automated re-engagement push sent', time: '1 hr ago' },
   { id: 4, user: 'Student #8822', action: 'Converted to OVHC', time: '2 hrs ago' }
 ];
+
+// --- NEW AI AGENT DATA ---
+
+export const aiBriefing = {
+  narrative: [
+    "Referral-led OVHC conversions increased 18% this week.",
+    "Students using MediGuide are converting 2.3x higher.",
+    "OTP verification failures impacting onboarding performance."
+  ],
+  estimatedOpp: "+$420K",
+  priorityCohort: "Monash Graduating Students",
+  highestRisk: "Activation Drop-off",
+  confidence: "92%"
+};
+
+export const aiFeed = [
+  { id: 1, agent: 'Segmentation Agent', insight: 'Detected high-intent graduate cohort from RMIT.', impact: '+$120K opportunity', confidence: '88%', time: 'Just now' },
+  { id: 2, agent: 'Referral Agent', insight: 'Ambassador activity increased 38% this week.', impact: 'High growth', confidence: '96%', time: '12m ago' },
+  { id: 3, agent: 'Retention Risk Agent', insight: 'Silent churn risk detected among inactive students.', impact: '-$80K risk', confidence: '82%', time: '1h ago' },
+  { id: 4, agent: 'Campaign Optimisation Agent', insight: 'WhatsApp onboarding sequence outperforming email by 24%.', impact: '+18% activation', confidence: '94%', time: '2h ago' }
+];
+
+export const approvalWorkflows = [
+  { id: 1, action: 'Launch WhatsApp onboarding sequence', impact: '+18% activation uplift', agent: 'Activation Agent', status: 'Awaiting Review' },
+  { id: 2, action: 'Trigger Monash Graduate Transition Campaign', impact: '+3.2% conversion uplift', agent: 'Conversion Agent', status: 'Awaiting Review' }
+];
+
+export const revenueImpactMetrics = {
+  identifiedToday: '+$420K',
+  referralProjected: '$1.2M',
+  recoverableChurn: '$180K',
+  conversionImprovement: '+2.4%'
+};
+
+export const agentCollaborationFlow = [
+  { id: 1, agent: 'Segmentation Agent', action: 'identified high-intent graduate cohort' },
+  { id: 2, agent: 'Conversion Agent', action: 'predicted strong OVHC likelihood' },
+  { id: 3, agent: 'Campaign Optimisation Agent', action: 'recommended WhatsApp outreach' },
+  { id: 4, agent: 'Referral Agent', action: 'suggested ambassador activation' },
+  { id: 5, agent: 'Insight Narrator Agent', action: 'generated executive recommendation' }
+];
+
+export const executiveSummary = "Referral-led engagement continues to outperform traditional acquisition channels, while graduate transition cohorts remain the strongest near-term conversion opportunity. Overall system conversion tracking above target, offset by activation drop-offs needing intervention.";
+
+// --- NEW SEGMENTATION AGENT DATA ---
+
+export const segmentHero = {
+  title: "Emerging High-Intent Cohort Detected",
+  insight: "RMIT postgraduate students nearing graduation who attended healthcare webinars are showing 2.1x higher OVHC exploration behaviour.",
+  revenueOpp: "+$420K",
+  size: "3,240 students",
+  conversionProb: "82%",
+  confidence: "91%",
+  agent: "Segmentation Agent",
+  reviewDetails: {
+    deepInsights: [
+      'Webinar attendees spend 3x longer on the "Compare Plans" page than the average user.',
+      '90% of this cohort will see their current student visa expire within 90 days.',
+      'Significant overlap detected with high MediGuide interaction rates.'
+    ],
+    agentLogs: [
+      { agent: 'Segmentation Agent', action: 'Correlated university CRM data with recent webinar attendance logs.', time: '12h ago' },
+      { agent: 'Community Agent', action: 'Flagged a spike in visa-related forum questions from this specific group.', time: '8h ago' },
+      { agent: 'Conversion Agent', action: 'Calculated an 82% propensity to convert if presented with an exclusive post-graduate offer.', time: '2h ago' }
+    ],
+    projectedImpact: { metric: 'Revenue Opportunity', current: '$0', projected: '+$420K', timeframe: 'Next 30 Days' },
+    executionSteps: [
+      { step: 1, desc: 'Generate "RMIT Graduate Exclusive" pricing tier', status: 'ready' },
+      { step: 2, desc: 'Draft multi-channel campaign (Email + In-App)', status: 'ready' },
+      { step: 3, desc: 'Deploy to 3,240 identified students', status: 'pending' }
+    ]
+  }
+};
+
+export const segmentEvolution = [
+  { metric: "High-intent OVHC explorers", trend: "+22%", status: "growing" },
+  { metric: "Community ambassadors", trend: "+18%", status: "growing" },
+  { metric: "Silent churn risk users", trend: "-12%", status: "reducing" },
+  { metric: "Activation drop-offs", trend: "+8%", status: "alert" }
+];
+
+export const behaviouralClusters = [
+  { id: 'A', name: 'Cluster A: The Explorers', traits: ['Frequent MediGuide usage', 'High community activity', 'Strong OVHC intent'], size: '45%' },
+  { id: 'B', name: 'Cluster B: The Disengaged', traits: ['Inactive after onboarding', 'No community engagement', 'High churn risk'], size: '20%' },
+  { id: 'C', name: 'Cluster C: The Advocates', traits: ['Strong referral behaviour', 'High content sharing', 'Ambassador potential'], size: '35%' }
+];
+
+export const microSegments = [
+  { insight: "Students attending visa webinars AND engaging with referral rewards convert 38% higher.", agent: "Conversion Agent" },
+  { insight: "Users participating in community events show OVHC exploration 4 weeks earlier than average.", agent: "Community Agent" }
+];
+
+export const segmentActions = [
+  { id: 1, recommendation: "Launch RMIT graduate transition campaign", impact: "+$240K", confidence: "91%", agent: "Conversion Agent" },
+  { id: 2, recommendation: "Reward Monash ambassadors", impact: "+18% referrals", confidence: "96%", agent: "Referral Agent" },
+  { id: 3, recommendation: "Push onboarding recovery sequence", impact: "Recover 6,200 users", confidence: "88%", agent: "Activation Agent" }
+];
+
+export const segmentSummaryStr = "Behaviour-driven segmentation indicates graduating students participating in community engagement and healthcare education content show the strongest OVHC conversion readiness. Prioritise RMIT and Monash transition campaigns to capture emerging intent.";
+
+// --- ACTION STUDIO MOCK DATA ---
+
+export const actionHero = {
+  title: "Recommended High-Impact Intervention",
+  action: "Launch a graduate transition sequence for Monash postgraduate students engaging with OVHC pricing content.",
+  uplift: "+3.2%",
+  revenue: "+$240K",
+  size: "8,200 users",
+  confidence: "91%",
+  agents: ['Conversion Agent', 'Campaign Optimisation Agent', 'Referral Agent', 'Retention Risk Agent']
+};
+
+export const aiWorkflows = [
+  {
+    id: 1,
+    name: "Graduate Transition Sequence",
+    why: "Students repeatedly explored OVHC pricing and attended visa-related webinars.",
+    agents: ['Conversion Agent', 'Segmentation Agent'],
+    audience: "Final-year RMIT students",
+    channels: "Email + In-App",
+    timing: "45 days before expiry",
+    impact: { uplift: "+12%", revenue: "+$180K" },
+    confidence: "94%",
+    triggerCondition: "Visa Expiry < 45 days AND Page Views include 'Pricing'",
+    messageTitle: "Exclusive Graduate Offer",
+    messageBody: "Congratulations on nearing graduation! Transition to our exclusive graduate OVHC tier today and get 2 months free."
+  },
+  {
+    id: 2,
+    name: "Silent Churn Re-engagement",
+    why: "High drop-off detected after 30 days of inactivity, highly correlated with incomplete profiles.",
+    agents: ['Retention Risk Agent', 'Campaign Optimisation Agent'],
+    audience: "Inactive new arrivals (30+ days)",
+    channels: "WhatsApp",
+    timing: "Immediately",
+    impact: { uplift: "Recover 400 users", revenue: "Mitigate -$85K risk" },
+    confidence: "88%",
+    triggerCondition: "Inactivity > 30 days AND Profile Status is 'Incomplete'",
+    messageTitle: "Complete your Medibank Profile",
+    messageBody: "Hey there! We noticed you haven't finished setting up your profile. Complete it today to unlock your full health cover benefits."
+  },
+  {
+    id: 3,
+    name: "Referral Ambassador Activation",
+    why: "Referral momentum increased significantly among active community members answering forum queries.",
+    agents: ['Referral Agent', 'Community Agent'],
+    audience: "High-referral ambassadors",
+    channels: "Push Notification",
+    timing: "After 3rd successful referral",
+    impact: { uplift: "+35% referral volume", revenue: "High LTV" },
+    confidence: "96%",
+    triggerCondition: "Successful Referrals >= 3",
+    messageTitle: "You've unlocked Ambassador Status!",
+    messageBody: "Thanks for sharing Medibank! You've been upgraded to Ambassador status. Your next referral will earn you double rewards."
+  }
+];
+
+export const crossAgentFlow = [
+  { agent: "Segmentation Agent", action: "Identified high-intent graduate cohort based on webinar logs" },
+  { agent: "Conversion Agent", action: "Predicted 82% OVHC likelihood" },
+  { agent: "Campaign Optimisation Agent", action: "Recommended WhatsApp outreach for highest open rate" },
+  { agent: "Referral Agent", action: "Injected ambassador activation logic for post-purchase" }
+];
+
+export const performanceIntelligence = [
+  { insight: "Graduate onboarding workflow increased OVHC exploration by 18%.", confidence: "94%", impact: "High" },
+  { insight: "Referral ambassador sequence generated strongest engagement at Monash.", confidence: "89%", impact: "Medium" },
+  { insight: "Push notifications outperform email for onboarding recovery by 2.4x.", confidence: "98%", impact: "High" }
+];
+
+export const optimisationRecommendations = [
+  { title: "Shift onboarding communication to WhatsApp", why: "Email open rates for new arrivals have dropped below 15%.", projected: "+22% engagement", impact: "+$45K" },
+  { title: "Add webinar CTA inside referral flows", why: "Users referring peers are 3x more likely to attend educational events.", projected: "+15% attendance", impact: "High LTV" }
+];
+
+export const approvalQueue = [
+  { id: 1, name: "Graduate Referral Campaign", status: "Awaiting Approval", impact: "+$180K" },
+  { id: 2, name: "Onboarding Recovery Flow", status: "Awaiting Review", impact: "Recover 1,200 users" }
+];
+
+export const actionSummaryStr = "Behaviour-driven intervention workflows targeting graduating students and referral ambassadors continue to generate the strongest projected conversion uplift opportunities. 2 high-impact workflows await human approval.";
